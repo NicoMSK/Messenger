@@ -1,10 +1,10 @@
-import Button from "@mui/material/Button";
 import ScopedCssBaseline from "@mui/material/ScopedCssBaseline";
+import { LoginPage } from "./pages/login-page/LoginPage";
 
 export default function App() {
   return (
     <ScopedCssBaseline>
-      <Button variant="contained">Hello world</Button>;
+      <LoginPage />
     </ScopedCssBaseline>
   );
 }

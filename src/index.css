@@ -1,1 +1,33 @@
+:root {
+  --main-background: #e9efec;
+  --chat-background: #f5f5f5;
+  --chat-title: #f0f8ff;
+}
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.container {
+  margin-inline: max(20px, (100% - 960px) / 2);
+}
