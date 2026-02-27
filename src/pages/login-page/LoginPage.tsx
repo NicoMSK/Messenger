@@ -1,75 +1,74 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { type SelectChangeEvent } from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import "./login-page.css";
+import { useState } from "react";
+
+import {
+  LoginContainer,
+  LoginForm,
+  LoginSection,
+  LoginTitle,
+  LoginWrapper,
+  LoginButton,
+} from "./login-page";
 
 export function LoginPage() {
-  const [chat, setChat] = React.useState("");
+  const [nameLength, setNameLength] = useState(false);
+  const [inputValue, setInputValue] = useState("");
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setChat(event.target.value as string);
-  };
+  function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (inputValue.trim().length === 0) {
+      setNameLength(true);
+      return;
+    }
+
+    setNameLength(false);
+    setInputValue("");
+  }
+
+  function handleNameChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
+    const value = event.target.value;
+
+    setInputValue(value);
+
+    if (value.trim().length > 0) {
+      setNameLength(false);
+    }
+  }
 
   return (
-    <section className="login">
-      <div className="container login__container">
-        <div className="login__wrapper">
-          <h1 className="login__title">Выбор чата</h1>
-          <Box
-            className="login__form"
-            component="form"
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 2,
-              maxWidth: 320,
-              width: "100%",
-            }}
+    <LoginSection>
+      <LoginContainer>
+        <LoginWrapper>
+          <LoginTitle>Добро пожаловать</LoginTitle>
+          <LoginForm
             noValidate
             autoComplete="off"
+            onSubmit={(e) => handleSubmit(e)}
           >
             <TextField
               fullWidth
               id="outlined-basic"
-              label="Ваше имя"
+              label="Введите ваше имя"
               variant="outlined"
+              error={nameLength}
+              value={inputValue}
+              helperText={nameLength ? "Поле не может быть пустым" : ""}
+              onChange={(e) => {
+                handleNameChange(e);
+              }}
             />
-            <FormControl fullWidth>
-              <InputLabel id="chat-select-label">Выбор чата</InputLabel>
-              <Select
-                labelId="chat-select-label"
-                id="chat-select"
-                value={chat}
-                label="Выбор чата"
-                onChange={handleChange}
-              >
-                <MenuItem value={1}>#1</MenuItem>
-                <MenuItem value={2}>#2</MenuItem>
-                <MenuItem value={3}>#3</MenuItem>
-              </Select>
-            </FormControl>
             <Stack direction="row">
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{
-                  marginTop: "10px",
-                  width: 200,
-                }}
-              >
+              <LoginButton fullWidth variant="contained" type="submit">
                 Войти
-              </Button>
+              </LoginButton>
             </Stack>
-          </Box>
-        </div>
-      </div>
-    </section>
+          </LoginForm>
+        </LoginWrapper>
+      </LoginContainer>
+    </LoginSection>
   );
 }
