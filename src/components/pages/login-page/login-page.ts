@@ -1,8 +1,9 @@
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
+import { COLOR } from "../styleVariables";
 
 export const LoginSection = styled("section")({
-  backgroundColor: "var(--main-background)",
+  backgroundColor: COLOR.background.main,
 });
 
 export const LoginContainer = styled("div")({
@@ -19,7 +20,7 @@ export const LoginWrapper = styled("div")({
   flexDirection: "column",
   alignItems: "center",
 
-  backgroundColor: "var(--chat-background)",
+  backgroundColor: COLOR.background.loginWrapper,
   borderRadius: "15px",
   boxShadow: "0px 5px 10px 2px rgba(34, 60, 80, 0.2)",
 });
@@ -30,7 +31,7 @@ export const LoginTitle = styled("h1")({
   padding: "5px 15px",
   fontSize: "28px",
 
-  backgroundColor: "var(--chat-title)",
+  backgroundColor: COLOR.background.title,
   borderRadius: "10px",
   boxShadow: "0px 5px 10px 2px rgba(34, 60, 80, 0.2)",
 });
