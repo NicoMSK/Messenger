@@ -12,7 +12,7 @@ export function Chats() {
       <ChatsTitle>Список чатов</ChatsTitle>
       <ChatsList>
         <ChatsItem>
-          <ChatsLink href="#">Название чата</ChatsLink>
+          <ChatsLink to="/chats/chat-1">Тестовый ЧАТ</ChatsLink>
         </ChatsItem>
       </ChatsList>
     </ChatsWrapper>

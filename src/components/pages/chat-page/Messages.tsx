@@ -7,15 +7,23 @@ import {
   MessageTime,
 } from "./chatPageStyle";
 
-export const Messages = () => {
+type MessagesProps = {
+  author: string;
+  time: string;
+  text: string;
+};
+
+export const Messages = (props: MessagesProps) => {
+  const { author, time, text } = props;
+
   return (
     <MessagesWrapper>
       <MessageItem>
         <MessageHeader>
-          <MessageAuthor>НИК нейм</MessageAuthor>
-          <MessageTime className="message-time">12:45 03.03.2026</MessageTime>
+          <MessageAuthor>{author} </MessageAuthor>
+          <MessageTime className="message-time">{time}</MessageTime>
         </MessageHeader>
-        <MessageText>Сообщение</MessageText>
+        <MessageText>{text} </MessageText>
       </MessageItem>
     </MessagesWrapper>
   );

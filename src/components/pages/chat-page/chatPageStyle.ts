@@ -1,6 +1,7 @@
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import { COLOR } from "../styleVariables";
+import { NavLink } from "react-router-dom";
 
 export const ChatSection = styled("section")({
   display: "flex",
@@ -30,7 +31,7 @@ export const ChatsTitle = styled("h1")({
   margin: 0,
   padding: "16px",
 
-  fontSize: "18px",
+  fontSize: "20px",
   fontWeight: 600,
 
   borderBottom: "1px solid #eee",
@@ -47,9 +48,9 @@ export const ChatsItem = styled("li")({
   borderBottom: "1px solid #f0f0f0",
 });
 
-export const ChatsLink = styled("a")({
+export const ChatsLink = styled(NavLink)({
   padding: "14px 16px",
-  fontSize: "14px",
+  fontSize: "16px",
   width: "100%",
 
   display: "flex",
@@ -60,6 +61,10 @@ export const ChatsLink = styled("a")({
 
   "&:hover": {
     backgroundColor: "#eaeaea",
+  },
+
+  "&.active": {
+    backgroundColor: "#e3ff73",
   },
 });
 
@@ -129,4 +134,18 @@ export const MessageTime = styled("p")({
 export const MessageText = styled("p")({
   margin: 0,
   fontSize: "16px",
+});
+
+export const EmptyChat = styled("div")({
+  height: "100vh",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+});
+
+export const EmptyChatText = styled("p")({
+  margin: "0",
+  padding: "0",
+  fontSize: "28px",
+  fontWeight: "700",
 });

@@ -1,7 +1,7 @@
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
 import {
   LoginContainer,
   LoginForm,
@@ -14,6 +14,7 @@ import {
 export function LoginPage() {
   const [nameLength, setNameLength] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const navigate = useNavigate();
 
   function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -25,6 +26,7 @@ export function LoginPage() {
 
     setNameLength(false);
     setInputValue("");
+    navigate("/chats");
   }
 
   function handleNameChange(
