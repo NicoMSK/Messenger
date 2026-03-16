@@ -4,7 +4,7 @@ import {
   ChatsFormMessage,
   ChatsMessegeButton,
   ChatsWrapperForm,
-} from "./chatPageStyle";
+} from "./MessagesStyle";
 
 export function ChatForm() {
   return (
