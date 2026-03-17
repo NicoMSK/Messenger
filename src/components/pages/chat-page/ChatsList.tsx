@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { AddNewChat } from "./AddNewChatButton";
+import { AddNewChat, type ChatProp } from "./AddNewChatButton";
 import { ChatsTitle, ChatsWrapper } from "./chatPageStyle";
 import { ChatsItem, ChatsLink, ChatsList } from "./ChatsListStyle";
 
-export function Chats() {
+export function Chats({ openAddChat }: ChatProp) {
   const [chats, setChats] = useState([
     { id: "chat-1", title: "Тестовый ЧАТ" },
     { id: "chat-2", title: "Тестовый ЧАТ-2" },
@@ -33,7 +33,7 @@ export function Chats() {
           </ChatsItem>
         ))}
       </ChatsList>
-      <AddNewChat addChat={addChat} />
+      <AddNewChat openAddChat={openAddChat} />
     </ChatsWrapper>
   );
 }

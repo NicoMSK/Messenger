@@ -11,7 +11,19 @@ import {
   LoginButton,
 } from "./pages/login-page/login-page";
 
-export function FormComponent({ title, label, addButton, cancelButton }) {
+type FormProp = {
+  title: string;
+  label: string;
+  addButton: string;
+  cancelButton?: string;
+};
+
+export function FormComponent({
+  title,
+  label,
+  addButton,
+  cancelButton,
+}: FormProp) {
   const [nameLength, setNameLength] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
@@ -64,9 +76,11 @@ export function FormComponent({ title, label, addButton, cancelButton }) {
               }}
             />
             <Stack direction="row">
-              <LoginButton fullWidth variant="outlined" type="submit">
-                {cancelButton}
-              </LoginButton>
+              {cancelButton && (
+                <LoginButton fullWidth variant="outlined" type="submit">
+                  {cancelButton}
+                </LoginButton>
+              )}
               <LoginButton fullWidth variant="contained" type="submit">
                 {addButton}
               </LoginButton>
