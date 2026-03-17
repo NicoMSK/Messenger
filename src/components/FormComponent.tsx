@@ -16,6 +16,8 @@ type FormProp = {
   label: string;
   addButton: string;
   cancelButton?: string;
+  addInputValue: (inputValue: string) => void;
+  clouseForm?: () => void;
 };
 
 export function FormComponent({
@@ -23,6 +25,8 @@ export function FormComponent({
   label,
   addButton,
   cancelButton,
+  addInputValue,
+  clouseForm,
 }: FormProp) {
   const [nameLength, setNameLength] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -77,11 +81,21 @@ export function FormComponent({
             />
             <Stack direction="row">
               {cancelButton && (
-                <LoginButton fullWidth variant="outlined" type="submit">
+                <LoginButton
+                  fullWidth
+                  variant="outlined"
+                  type="button"
+                  onClick={clouseForm}
+                >
                   {cancelButton}
                 </LoginButton>
               )}
-              <LoginButton fullWidth variant="contained" type="submit">
+              <LoginButton
+                fullWidth
+                variant="contained"
+                type="submit"
+                onClick={() => addInputValue(inputValue)}
+              >
                 {addButton}
               </LoginButton>
             </Stack>

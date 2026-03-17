@@ -12,8 +12,35 @@ export function ChatPage() {
   const [isNewChat, setIsNewChat] = useState(false);
   const navigate = useNavigate();
 
+  const [chats, setChats] = useState([
+    { id: "chat-1", title: "Тестовый ЧАТ" },
+    { id: "chat-2", title: "Тестовый ЧАТ-2" },
+    { id: "chat-3", title: "Тестовый ЧАТ-3" },
+    { id: "chat-4", title: "Тестовый ЧАТ-4" },
+  ]);
+
+  function addChat(inputValue: string) {
+    setChats((chats) => {
+      return [
+        ...chats,
+        {
+          id: String(crypto.randomUUID()),
+          title: inputValue,
+        },
+      ];
+    });
+  }
+
   function openAddChat() {
     setIsNewChat(true);
+  }
+
+  function renderContent() {
+    if (isNewChat)
+      return <AddNewChatPage addChat={addChat} clouseForm={closeModal} />;
+    if (chatId) return <ChatWindow />;
+
+    return <EmptyChatPage />;
   }
 
   function closeModal() {
@@ -25,17 +52,20 @@ export function ChatPage() {
 
   return (
     <ChatSection>
-      <Chats openAddChat={openAddChat} />
+      <Chats openAddChat={openAddChat} chatsData={chats} />
       <ChatsContent
         onClick={(e) => e.currentTarget === e.target && closeModal()}
       >
-        {isNewChat ? (
-          <AddNewChatPage />
+        {/* {как лучше и правильней сделать?} */}
+
+        {/* {isNewChat ? (
+          <AddNewChatPage addChat={addChat} />
         ) : chatId ? (
           <ChatWindow />
         ) : (
           <EmptyChatPage />
-        )}
+        )} */}
+        {renderContent()}
       </ChatsContent>
     </ChatSection>
   );

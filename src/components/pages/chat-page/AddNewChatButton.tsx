@@ -1,7 +1,9 @@
 import { NewChatButton, NewChatButtonWrapper } from "./AddNewChatButtonStyle";
 import AddIcon from "@mui/icons-material/Add";
 
-export type ChatProp = { openAddChat: () => void };
+export type ChatProp = {
+  openAddChat: () => void;
+};
 
 export function AddNewChat({ openAddChat }: ChatProp) {
   return (
