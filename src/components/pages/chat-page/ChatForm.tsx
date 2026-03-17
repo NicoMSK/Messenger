@@ -1,5 +1,6 @@
 import FormControl from "@mui/material/FormControl";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import SendIcon from "@mui/icons-material/Send";
 import {
   ChatsFormMessage,
   ChatsMessegeButton,
@@ -13,7 +14,11 @@ export function ChatForm() {
         <FormControl fullWidth>
           <OutlinedInput placeholder="Сообщение..." />
         </FormControl>
-        <ChatsMessegeButton variant="contained" type="submit">
+        <ChatsMessegeButton
+          variant="contained"
+          type="submit"
+          endIcon={<SendIcon />}
+        >
           Отправить
         </ChatsMessegeButton>
       </ChatsFormMessage>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AddNewChat } from "./AddNewChat";
+import { AddNewChat } from "./AddNewChatButton";
 import { ChatsTitle, ChatsWrapper } from "./chatPageStyle";
 import { ChatsItem, ChatsLink, ChatsList } from "./ChatsListStyle";
 
@@ -12,9 +12,9 @@ export function Chats() {
   ]);
 
   function addChat() {
-    setChats((posts) => {
+    setChats((chats) => {
       return [
-        ...posts,
+        ...chats,
         {
           id: String(crypto.randomUUID()),
           title: "пробный",

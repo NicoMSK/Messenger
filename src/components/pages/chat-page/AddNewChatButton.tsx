@@ -1,4 +1,4 @@
-import { NewChatButton, NewChatButtonWrapper } from "./AddNewChatStyle";
+import { NewChatButton, NewChatButtonWrapper } from "./AddNewChatButtonStyle";
 import AddIcon from "@mui/icons-material/Add";
 
 type ChatProp = { addChat: () => void };
