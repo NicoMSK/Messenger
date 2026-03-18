@@ -1,6 +1,14 @@
-import { AddNewChat, type ChatProp } from "./AddNewChatButton";
+import { AddNewChat } from "./AddNewChatButton";
 import { ChatsTitle, ChatsWrapper } from "./chatPageStyle";
 import { ChatsItem, ChatsLink, ChatsList } from "./ChatsListStyle";
+
+export type ChatProp = {
+  openAddChat: () => void;
+  chatsData: {
+    id: string;
+    title: string;
+  }[];
+};
 
 export function Chats({ openAddChat, chatsData }: ChatProp) {
   return (
@@ -17,3 +25,8 @@ export function Chats({ openAddChat, chatsData }: ChatProp) {
     </ChatsWrapper>
   );
 }
+
+// 2) сделать чтоб закрывалась форма добавления чата, когда чат добавлен
+// 3) не давать добавлять пустой чат
+// 4) если открыта форма добавления, и если открыть любой чат, то форма должна закрыться и открыться выбранный чат
+/// 5) поправить кнопки, что не слипались

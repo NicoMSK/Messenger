@@ -20,6 +20,8 @@ export function ChatPage() {
   ]);
 
   function addChat(inputValue: string) {
+    if (inputValue.trim().length === 0) return;
+
     setChats((chats) => {
       return [
         ...chats,
