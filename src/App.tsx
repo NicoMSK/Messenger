@@ -1,7 +1,7 @@
 import ScopedCssBaseline from "@mui/material/ScopedCssBaseline";
-import { LoginPage } from "./components/pages/login-page/LoginPage";
+import { LoginPage } from "./pages/login-page/LoginPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { ChatPage } from "./components/pages/chat-page/chatPage";
+import { ChatPage } from "./pages/chat-page/chatPage";
 
 export default function App() {
   return (

@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useEscClose } from "../../../hooks/useEscClose";
+import { useEscClose } from "../../hooks/useEscClose";
 import { ChatsContent, ChatSection } from "./chatPageStyle";
 import { Chats } from "./ChatsList";
 import { EmptyChatPage } from "./EmptyChatPage";
@@ -55,9 +55,7 @@ export function ChatPage() {
   return (
     <ChatSection>
       <Chats openAddChat={openAddChat} chatsData={chats} />
-      <ChatsContent
-        onClick={(e) => e.currentTarget === e.target && closeModal()}
-      >
+      <ChatsContent>
         {/* {как лучше и правильней сделать?} */}
 
         {/* {isNewChat ? (

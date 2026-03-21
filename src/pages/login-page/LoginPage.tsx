@@ -1,4 +1,4 @@
-import { FormComponent } from "../../FormComponent";
+import { FormComponent } from "../../components/FormComponent";
 
 export function LoginPage() {
   return (

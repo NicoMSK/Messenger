@@ -1,4 +1,4 @@
-import { FormComponent } from "../../FormComponent";
+import { FormComponent } from "../../components/FormComponent";
 
 type AddChatProp = {
   addChat: (inputValue: string) => void;

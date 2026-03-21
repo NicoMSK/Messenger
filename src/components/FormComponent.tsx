@@ -9,7 +9,7 @@ import {
   LoginTitle,
   LoginWrapper,
   LoginButton,
-} from "./pages/login-page/login-page";
+} from "../pages/login-page/login-page";
 
 type FormProp = {
   title: string;
