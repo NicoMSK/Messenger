@@ -1,14 +1,14 @@
 import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  LoginContainer,
-  LoginForm,
-  LoginSection,
-  LoginTitle,
-  LoginWrapper,
-  LoginButton,
+  Container,
+  Form,
+  Section,
+  Title,
+  Wrapper,
+  ButtonForm,
+  ButtonWrapper,
 } from "../pages/login-page/login-page";
 
 type FormProp = {
@@ -58,15 +58,11 @@ export function FormComponent({
   }
 
   return (
-    <LoginSection>
-      <LoginContainer>
-        <LoginWrapper>
-          <LoginTitle>{title}</LoginTitle>
-          <LoginForm
-            noValidate
-            autoComplete="off"
-            onSubmit={(e) => handleSubmit(e)}
-          >
+    <Section>
+      <Container>
+        <Wrapper>
+          <Title>{title}</Title>
+          <Form noValidate autoComplete="off" onSubmit={(e) => handleSubmit(e)}>
             <TextField
               fullWidth
               id="outlined-basic"
@@ -79,29 +75,29 @@ export function FormComponent({
                 handleNameChange(e);
               }}
             />
-            <Stack direction="row">
+            <ButtonWrapper direction="row">
               {cancelButton && (
-                <LoginButton
+                <ButtonForm
                   fullWidth
                   variant="outlined"
                   type="button"
                   onClick={clouseForm}
                 >
                   {cancelButton}
-                </LoginButton>
+                </ButtonForm>
               )}
-              <LoginButton
+              <ButtonForm
                 fullWidth
                 variant="contained"
                 type="submit"
                 onClick={() => addInputValue(inputValue)}
               >
                 {addButton}
-              </LoginButton>
-            </Stack>
-          </LoginForm>
-        </LoginWrapper>
-      </LoginContainer>
-    </LoginSection>
+              </ButtonForm>
+            </ButtonWrapper>
+          </Form>
+        </Wrapper>
+      </Container>
+    </Section>
   );
 }
