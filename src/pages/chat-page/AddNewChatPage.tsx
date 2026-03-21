@@ -5,7 +5,7 @@ type AddChatProp = {
   clouseForm: () => void;
 };
 
-export function AddNewChatPage({ addChat, clouseForm }: AddChatProp) {
+export function AddNewChat({ addChat, clouseForm }: AddChatProp) {
   return (
     <FormComponent
       title={"Название нового чата"}

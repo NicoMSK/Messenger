@@ -1,7 +1,7 @@
 import ScopedCssBaseline from "@mui/material/ScopedCssBaseline";
 import { LoginPage } from "./pages/login-page/LoginPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { ChatPage } from "./pages/chat-page/chatPage";
+import { ChatPage } from "./pages/chat-page/ChatPage";
 
 export default function App() {
   return (
@@ -9,7 +9,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/chats" element={<ChatPage />} />
+          <Route path="/chats/" element={<ChatPage />} />
           <Route path="/chats/:chatId" element={<ChatPage />} />
         </Routes>
       </BrowserRouter>

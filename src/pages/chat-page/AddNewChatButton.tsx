@@ -5,7 +5,7 @@ type AddNewChatProps = {
   openAddChat: () => void;
 };
 
-export function AddNewChat({ openAddChat }: AddNewChatProps) {
+export function AddNewChatButton({ openAddChat }: AddNewChatProps) {
   return (
     <NewChatButtonWrapper>
       <NewChatButton color="primary" aria-label="add" onClick={openAddChat}>

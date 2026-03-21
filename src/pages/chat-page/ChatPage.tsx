@@ -2,8 +2,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEscClose } from "../../hooks/useEscClose";
 import { ChatsContent, ChatSection } from "./chatPageStyle";
 import { Chats } from "./ChatsList";
-import { EmptyChatPage } from "./EmptyChatPage";
-import { AddNewChatPage } from "./AddNewChatPage";
+import { EmptyChatPage } from "../../components/EmptyChatPage";
+import { AddNewChat } from "./AddNewChatPage";
 import { useState } from "react";
 import { ChatWindow } from "./ChatWindow";
 
@@ -20,26 +20,32 @@ export function ChatPage() {
   ]);
 
   function addChat(inputValue: string) {
+    const newChatId = String(crypto.randomUUID());
+
     if (inputValue.trim().length === 0) return;
 
     setChats((chats) => {
       return [
         ...chats,
         {
-          id: String(crypto.randomUUID()),
+          id: newChatId,
           title: inputValue,
         },
       ];
     });
+
+    setIsNewChat(false);
+    navigate(`/chats/${newChatId}`);
   }
 
   function openAddChat() {
+    navigate("/chats");
     setIsNewChat(true);
   }
 
   function renderContent() {
     if (isNewChat)
-      return <AddNewChatPage addChat={addChat} clouseForm={closeModal} />;
+      return <AddNewChat addChat={addChat} clouseForm={closeModal} />;
     if (chatId) return <ChatWindow />;
 
     return <EmptyChatPage />;
@@ -55,18 +61,7 @@ export function ChatPage() {
   return (
     <ChatSection>
       <Chats openAddChat={openAddChat} chatsData={chats} />
-      <ChatsContent>
-        {/* {как лучше и правильней сделать?} */}
-
-        {/* {isNewChat ? (
-          <AddNewChatPage addChat={addChat} />
-        ) : chatId ? (
-          <ChatWindow />
-        ) : (
-          <EmptyChatPage />
-        )} */}
-        {renderContent()}
-      </ChatsContent>
+      <ChatsContent>{renderContent()}</ChatsContent>
     </ChatSection>
   );
 }

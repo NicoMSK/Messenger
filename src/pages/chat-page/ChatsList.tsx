@@ -1,4 +1,4 @@
-import { AddNewChat } from "./AddNewChatButton";
+import { AddNewChatButton } from "./AddNewChatButton";
 import { ChatsTitle, ChatsWrapper } from "./chatPageStyle";
 import { ChatsItem, ChatsLink, ChatsList } from "./ChatsListStyle";
 
@@ -21,7 +21,7 @@ export function Chats({ openAddChat, chatsData }: ChatProp) {
           </ChatsItem>
         ))}
       </ChatsList>
-      <AddNewChat openAddChat={openAddChat} />
+      <AddNewChatButton openAddChat={openAddChat} />
     </ChatsWrapper>
   );
 }
