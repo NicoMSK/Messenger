@@ -20,7 +20,7 @@ export function ChatPage() {
   ]);
 
   function addChat(inputValue: string) {
-    const newChatId = String(crypto.randomUUID());
+    const newChatId = crypto.randomUUID();
 
     if (inputValue.trim().length === 0) return;
 
@@ -44,7 +44,7 @@ export function ChatPage() {
   }
 
   function renderContent() {
-    if (isNewChat)
+    if (isNewChat && !chatId)
       return <AddNewChat addChat={addChat} clouseForm={closeModal} />;
     if (chatId) return <ChatWindow />;
 
