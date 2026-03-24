@@ -1,4 +1,4 @@
-import { EmptyChat, EmptyChatText } from "../pages/chat-page/chatPageStyle";
+import { EmptyChat, EmptyChatText } from "../../pages/chat-page/chatPageStyle";
 
 export function EmptyChatPage() {
   return (

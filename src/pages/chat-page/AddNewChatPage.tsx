@@ -1,4 +1,4 @@
-import { FormComponent } from "../../components/FormComponent";
+import { FormComponent } from "../../shared/components/FormComponent";
 
 type AddChatProp = {
   addChat: (inputValue: string) => void;
@@ -13,7 +13,7 @@ export function AddNewChat({ addChat, clouseForm }: AddChatProp) {
       addButton={"Создать"}
       cancelButton={"Отмена"}
       addInputValue={addChat}
-      clouseForm={clouseForm}
+      closeForm={clouseForm}
     />
   );
 }

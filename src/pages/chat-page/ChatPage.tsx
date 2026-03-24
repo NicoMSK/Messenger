@@ -1,23 +1,25 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useEscClose } from "../../hooks/useEscClose";
+import { useEscClose } from "../../shared/hooks/useEscClose";
 import { ChatsContent, ChatSection } from "./chatPageStyle";
 import { Chats } from "./ChatsList";
-import { EmptyChatPage } from "../../components/EmptyChatPage";
 import { AddNewChat } from "./AddNewChatPage";
 import { useState } from "react";
 import { ChatWindow } from "./ChatWindow";
+import { EmptyChatPage } from "../../shared/components/EmptyChatPage";
+
+const MOCK_INITIAL_CHATS = [
+  { id: "chat-1", title: "Тестовый ЧАТ" },
+  { id: "chat-2", title: "Тестовый ЧАТ-2" },
+  { id: "chat-3", title: "Тестовый ЧАТ-3" },
+  { id: "chat-4", title: "Тестовый ЧАТ-4" },
+];
 
 export function ChatPage() {
   const { chatId } = useParams();
   const [isNewChat, setIsNewChat] = useState(false);
   const navigate = useNavigate();
 
-  const [chats, setChats] = useState([
-    { id: "chat-1", title: "Тестовый ЧАТ" },
-    { id: "chat-2", title: "Тестовый ЧАТ-2" },
-    { id: "chat-3", title: "Тестовый ЧАТ-3" },
-    { id: "chat-4", title: "Тестовый ЧАТ-4" },
-  ]);
+  const [chats, setChats] = useState(MOCK_INITIAL_CHATS);
 
   function addChat(inputValue: string) {
     const newChatId = crypto.randomUUID();

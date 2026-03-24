@@ -9,7 +9,7 @@ import {
   Wrapper,
   ButtonForm,
   ButtonWrapper,
-} from "../pages/login-page/login-page";
+} from "../components/FormComponentStyle";
 
 type FormProp = {
   title: string;
@@ -17,7 +17,7 @@ type FormProp = {
   addButton: string;
   cancelButton?: string;
   addInputValue: (inputValue: string) => void;
-  clouseForm?: () => void;
+  closeForm?: () => void;
 };
 
 export function FormComponent({
@@ -26,7 +26,7 @@ export function FormComponent({
   addButton,
   cancelButton,
   addInputValue,
-  clouseForm,
+  closeForm,
 }: FormProp) {
   const [nameLength, setNameLength] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -81,7 +81,7 @@ export function FormComponent({
                   fullWidth
                   variant="outlined"
                   type="button"
-                  onClick={clouseForm}
+                  onClick={closeForm}
                 >
                   {cancelButton}
                 </ButtonForm>
