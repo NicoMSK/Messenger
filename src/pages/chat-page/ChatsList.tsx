@@ -8,16 +8,22 @@ export type ChatProp = {
     id: string;
     title: string;
   }[];
+  chatId: string | null;
 };
 
-export function Chats({ openAddChat, chatsData }: ChatProp) {
+export function Chats({ openAddChat, chatsData, chatId }: ChatProp) {
   return (
     <ChatsWrapper>
       <ChatsTitle>Список чатов</ChatsTitle>
       <ChatsList>
         {chatsData.map((chat) => (
           <ChatsItem key={chat.id}>
-            <ChatsLink to={`/chats/${chat.id}`}>{chat.title}</ChatsLink>
+            <ChatsLink
+              isActive={chatId === chat.id}
+              to={`/chats?chatId=${chat.id}`}
+            >
+              {chat.title}
+            </ChatsLink>
           </ChatsItem>
         ))}
       </ChatsList>

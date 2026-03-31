@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEscClose } from "../../shared/hooks/useEscClose";
 import { ChatsContent, ChatSection } from "./chatPageStyle";
 import { Chats } from "./ChatsList";
@@ -15,8 +15,9 @@ const MOCK_INITIAL_CHATS = [
 ];
 
 export function ChatPage() {
-  const { chatId } = useParams();
-  const [isNewChat, setIsNewChat] = useState(false);
+  const [searchParams] = useSearchParams();
+  const chatId = searchParams.get("chatId");
+  const [isNewChat, setIsNewChat] = useState(false); //// переименовать
   const navigate = useNavigate();
 
   const [chats, setChats] = useState(MOCK_INITIAL_CHATS);
@@ -37,7 +38,7 @@ export function ChatPage() {
     });
 
     setIsNewChat(false);
-    navigate(`/chats/${newChatId}`);
+    navigate(`/chats?chatId=${newChatId}`);
   }
 
   function openAddChat() {
@@ -46,9 +47,12 @@ export function ChatPage() {
   }
 
   function renderContent() {
-    if (isNewChat && !chatId)
+    if (isNewChat && !chatId) {
       return <AddNewChat addChat={addChat} clouseForm={closeModal} />;
-    if (chatId) return <ChatWindow />;
+    }
+    if (chatId) {
+      return <ChatWindow />;
+    }
 
     return <EmptyChatPage />;
   }
@@ -62,7 +66,7 @@ export function ChatPage() {
 
   return (
     <ChatSection>
-      <Chats openAddChat={openAddChat} chatsData={chats} />
+      <Chats openAddChat={openAddChat} chatsData={chats} chatId={chatId} />
       <ChatsContent>{renderContent()}</ChatsContent>
     </ChatSection>
   );

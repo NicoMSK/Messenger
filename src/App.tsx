@@ -10,7 +10,6 @@ export default function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/chats/" element={<ChatPage />} />
-          <Route path="/chats/:chatId" element={<ChatPage />} />
         </Routes>
       </BrowserRouter>
     </ScopedCssBaseline>

@@ -28,7 +28,7 @@ export function FormComponent({
   addInputValue,
   closeForm,
 }: FormProp) {
-  const [nameLength, setNameLength] = useState(false);
+  const [inputIsEmpty, setInputIsEmpty] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
 
@@ -36,11 +36,11 @@ export function FormComponent({
     event.preventDefault();
 
     if (inputValue.trim().length === 0) {
-      setNameLength(true);
+      setInputIsEmpty(true);
       return;
     }
 
-    setNameLength(false);
+    setInputIsEmpty(false);
     setInputValue("");
     navigate("/chats");
   }
@@ -53,7 +53,7 @@ export function FormComponent({
     setInputValue(value);
 
     if (value.trim().length > 0) {
-      setNameLength(false);
+      setInputIsEmpty(false);
     }
   }
 
@@ -68,9 +68,9 @@ export function FormComponent({
               id="outlined-basic"
               label={label}
               variant="outlined"
-              error={nameLength}
+              error={inputIsEmpty}
               value={inputValue}
-              helperText={nameLength ? "Поле не может быть пустым" : ""}
+              helperText={inputIsEmpty ? "Поле не может быть пустым" : ""}
               onChange={(e) => {
                 handleNameChange(e);
               }}

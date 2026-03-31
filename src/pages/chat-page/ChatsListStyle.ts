@@ -1,6 +1,10 @@
 import { styled } from "@mui/material/styles";
 import { NavLink } from "react-router-dom";
 
+type ChatsLinkProps = {
+  isActive: boolean;
+};
+
 export const ChatsList = styled("ul")({
   overflowY: "auto",
   flex: 1,
@@ -12,7 +16,9 @@ export const ChatsItem = styled("li")({
   borderBottom: "1px solid #f0f0f0",
 });
 
-export const ChatsLink = styled(NavLink)({
+export const ChatsLink = styled(NavLink, {
+  shouldForwardProp: (prop) => prop !== "isActive",
+})<ChatsLinkProps>(({ isActive }) => ({
   padding: "14px 16px",
   fontSize: "16px",
   width: "100%",
@@ -27,7 +33,5 @@ export const ChatsLink = styled(NavLink)({
     backgroundColor: "#eaeaea",
   },
 
-  "&.active": {
-    backgroundColor: "#e3ff73",
-  },
-});
+  backgroundColor: isActive ? "#e3ff73" : "transparent",
+}));
