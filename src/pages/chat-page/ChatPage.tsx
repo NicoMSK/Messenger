@@ -17,7 +17,7 @@ const MOCK_INITIAL_CHATS = [
 export function ChatPage() {
   const [searchParams] = useSearchParams();
   const chatId = searchParams.get("chatId");
-  const [isNewChat, setIsNewChat] = useState(false); //// переименовать
+  const [isAddChatFormOpen, setIsAddChatFormOpen] = useState(false); //// переименовать
   const navigate = useNavigate();
 
   const [chats, setChats] = useState(MOCK_INITIAL_CHATS);
@@ -37,17 +37,17 @@ export function ChatPage() {
       ];
     });
 
-    setIsNewChat(false);
+    setIsAddChatFormOpen(false);
     navigate(`/chats?chatId=${newChatId}`);
   }
 
   function openAddChat() {
     navigate("/chats");
-    setIsNewChat(true);
+    setIsAddChatFormOpen(true);
   }
 
   function renderContent() {
-    if (isNewChat && !chatId) {
+    if (isAddChatFormOpen && !chatId) {
       return <AddNewChat addChat={addChat} clouseForm={closeModal} />;
     }
     if (chatId) {
@@ -59,7 +59,7 @@ export function ChatPage() {
 
   function closeModal() {
     navigate("/chats");
-    setIsNewChat(false);
+    setIsAddChatFormOpen(false);
   }
 
   useEscClose(closeModal);
