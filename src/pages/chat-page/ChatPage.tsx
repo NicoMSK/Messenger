@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEscClose } from "../../shared/hooks/useEscClose";
 import { ChatsContent, ChatSection } from "./chatPageStyle";
 import { Chats } from "./ChatsList";
-import { AddNewChat } from "./AddNewChatPage";
+import { AddNewChat } from "./AddNewChat";
 import { useState } from "react";
 import { ChatWindow } from "./ChatWindow";
 import { EmptyChatPage } from "../../shared/components/EmptyChatPage";
@@ -18,6 +18,7 @@ export function ChatPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const chatId = searchParams.get("chatId");
   const [isAddChatFormOpen, setIsAddChatFormOpen] = useState(false);
+  const [openAddNewChatModal, setOpenAddNewChatModal] = useState(false);
 
   const [chats, setChats] = useState(MOCK_INITIAL_CHATS);
 
@@ -42,12 +43,19 @@ export function ChatPage() {
 
   function openAddChat() {
     setSearchParams({});
+    setOpenAddNewChatModal(true);
     setIsAddChatFormOpen(true);
   }
 
   function renderContent() {
     if (isAddChatFormOpen && !chatId) {
-      return <AddNewChat addChat={addChat} clouseForm={closeModal} />;
+      return (
+        <AddNewChat
+          openDialog={openAddNewChatModal}
+          addChat={addChat}
+          clouseForm={closeModal}
+        />
+      );
     }
     if (chatId) {
       return <ChatWindow />;
@@ -58,6 +66,7 @@ export function ChatPage() {
 
   function closeModal() {
     setSearchParams({});
+    setOpenAddNewChatModal(false);
     setIsAddChatFormOpen(false);
   }
 

@@ -31,6 +31,7 @@ export const Title = styled("h1")({
   marginBottom: "25px",
   padding: "5px 15px",
   fontSize: "28px",
+  fontFamily: "Roboto, Helvetica, Arial, sans-serif",
 
   backgroundColor: COLOR.background.title,
   borderRadius: "10px",
@@ -53,5 +54,4 @@ export const ButtonWrapper = styled(Stack)({
 
 export const ButtonForm = styled(Button)({
   marginTop: "10px",
-  // width: "fit-content",
 });

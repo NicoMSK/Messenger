@@ -70,7 +70,7 @@ export function FormComponent({
               variant="outlined"
               error={inputIsEmpty}
               value={inputValue}
-              helperText={inputIsEmpty ? "Поле не может быть пустым" : ""}
+              helperText={inputIsEmpty ? "Поле не может быть пустым" : " "}
               onChange={(e) => {
                 handleNameChange(e);
               }}
