@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useEscClose } from "../../shared/hooks/useEscClose";
 import { ChatsContent, ChatSection } from "./chatPageStyle";
 import { Chats } from "./ChatsList";
@@ -15,10 +15,9 @@ const MOCK_INITIAL_CHATS = [
 ];
 
 export function ChatPage() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const chatId = searchParams.get("chatId");
-  const [isAddChatFormOpen, setIsAddChatFormOpen] = useState(false); //// переименовать
-  const navigate = useNavigate();
+  const [isAddChatFormOpen, setIsAddChatFormOpen] = useState(false);
 
   const [chats, setChats] = useState(MOCK_INITIAL_CHATS);
 
@@ -38,11 +37,11 @@ export function ChatPage() {
     });
 
     setIsAddChatFormOpen(false);
-    navigate(`/chats?chatId=${newChatId}`);
+    setSearchParams({ chatId: newChatId });
   }
 
   function openAddChat() {
-    navigate("/chats");
+    setSearchParams({});
     setIsAddChatFormOpen(true);
   }
 
@@ -58,7 +57,7 @@ export function ChatPage() {
   }
 
   function closeModal() {
-    navigate("/chats");
+    setSearchParams({});
     setIsAddChatFormOpen(false);
   }
 
