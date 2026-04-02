@@ -19,7 +19,6 @@ export function ChatPage() {
   const chatId = searchParams.get("chatId");
   const [isAddChatFormOpen, setIsAddChatFormOpen] = useState(false);
   const [openAddNewChatModal, setOpenAddNewChatModal] = useState(false);
-
   const [chats, setChats] = useState(MOCK_INITIAL_CHATS);
 
   function addChat(inputValue: string) {
@@ -53,7 +52,7 @@ export function ChatPage() {
         <AddNewChat
           openDialog={openAddNewChatModal}
           addChat={addChat}
-          clouseForm={closeModal}
+          closeForm={closeModal}
         />
       );
     }
