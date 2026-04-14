@@ -2,8 +2,10 @@ import { useEffect } from "react";
 
 const ESC_CODE = 27;
 
-export function useEscClose(callback: () => void) {
+export function useEscClose(callback: () => void, active: boolean = true) {
   useEffect(() => {
+    if (!active) return;
+
     function handleEsc(event: KeyboardEvent) {
       if (event.key === "Escape" || event.keyCode === ESC_CODE) {
         callback();
@@ -12,5 +14,5 @@ export function useEscClose(callback: () => void) {
     window.addEventListener("keydown", handleEsc);
 
     return () => window.removeEventListener("keydown", handleEsc);
-  }, [callback]);
+  }, [callback, active]);
 }
