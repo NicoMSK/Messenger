@@ -1,6 +1,7 @@
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import { COLOR } from "../styleVariables";
+import { Stack } from "@mui/material";
 
 export const LoginSection = styled("section")({
   backgroundColor: COLOR.background.main,
@@ -30,6 +31,7 @@ export const LoginTitle = styled("h1")({
   marginBottom: "25px",
   padding: "5px 15px",
   fontSize: "28px",
+  fontFamily: "Roboto, Helvetica, Arial, sans-serif",
 
   backgroundColor: COLOR.background.title,
   borderRadius: "10px",
@@ -40,12 +42,14 @@ export const LoginForm = styled("form")({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  gap: "16px",
+  gap: "12px",
   maxWidth: "320px",
   width: "100%",
 });
 
-export const LoginButton = styled(Button)({
-  marginTop: "10px",
-  width: "200px",
+export const LoginButtonWrapper = styled(Stack)({
+  width: "100%",
+  justifyContent: "space-between",
 });
+
+export const LoginButtonForm = styled(Button)({});

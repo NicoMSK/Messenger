@@ -1,5 +1,4 @@
 import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -8,11 +7,12 @@ import {
   LoginSection,
   LoginTitle,
   LoginWrapper,
-  LoginButton,
-} from "./login-page";
+  LoginButtonForm,
+  LoginButtonWrapper,
+} from "./LoginPage.styles";
 
 export function LoginPage() {
-  const [nameLength, setNameLength] = useState(false);
+  const [inputIsEmpty, setInputIsEmpty] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
 
@@ -20,11 +20,11 @@ export function LoginPage() {
     event.preventDefault();
 
     if (inputValue.trim().length === 0) {
-      setNameLength(true);
+      setInputIsEmpty(true);
       return;
     }
 
-    setNameLength(false);
+    setInputIsEmpty(false);
     setInputValue("");
     navigate("/chats");
   }
@@ -37,7 +37,7 @@ export function LoginPage() {
     setInputValue(value);
 
     if (value.trim().length > 0) {
-      setNameLength(false);
+      setInputIsEmpty(false);
     }
   }
 
@@ -56,18 +56,18 @@ export function LoginPage() {
               id="outlined-basic"
               label="Введите ваше имя"
               variant="outlined"
-              error={nameLength}
+              error={inputIsEmpty}
               value={inputValue}
-              helperText={nameLength ? "Поле не может быть пустым" : ""}
+              helperText={inputIsEmpty ? "Поле не может быть пустым" : " "}
               onChange={(e) => {
                 handleNameChange(e);
               }}
             />
-            <Stack direction="row">
-              <LoginButton fullWidth variant="contained" type="submit">
+            <LoginButtonWrapper direction="row">
+              <LoginButtonForm fullWidth variant="contained" type="submit">
                 Войти
-              </LoginButton>
-            </Stack>
+              </LoginButtonForm>
+            </LoginButtonWrapper>
           </LoginForm>
         </LoginWrapper>
       </LoginContainer>
