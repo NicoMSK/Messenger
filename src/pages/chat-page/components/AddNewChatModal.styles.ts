@@ -1,6 +1,6 @@
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
-import { COLOR } from "../styleVariables";
+import { COLOR } from "../../styleVariables";
 import { Stack } from "@mui/material";
 
 export const Wrapper = styled("div")({

@@ -25,6 +25,17 @@ export const MessagesWrapper = styled("div")({
   gap: "12px",
 });
 
+export const MessageTime = styled("p")({
+  margin: 0,
+  opacity: 0,
+
+  transition: "opacity 0.2s ease",
+
+  "@media (max-width: 768px)": {
+    opacity: 1,
+  },
+});
+
 export const MessageItem = styled("div")({
   padding: "12px",
   maxWidth: "60%",
@@ -51,17 +62,6 @@ export const MessageHeader = styled("div")({
 export const MessageAuthor = styled("p")({
   margin: 0,
   fontWeight: 700,
-});
-
-export const MessageTime = styled("p")({
-  margin: 0,
-  opacity: 0,
-
-  transition: "opacity 0.2s ease",
-
-  "@media (max-width: 768px)": {
-    opacity: 1,
-  },
 });
 
 export const MessageText = styled("p")({

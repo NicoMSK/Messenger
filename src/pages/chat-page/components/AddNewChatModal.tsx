@@ -5,20 +5,22 @@ import {
   Form,
   Title,
   Wrapper,
-} from "./AddNewChatStyle";
-import { useNavigate } from "react-router-dom";
+} from "./AddNewChatModal.styles";
 import { useState } from "react";
 
-type AddChatProp = {
+type AddNewChatModalProp = {
   openDialog: boolean;
   addChat: (inputValue: string) => void;
   closeForm: () => void;
 };
 
-export function AddNewChat({ openDialog, addChat, closeForm }: AddChatProp) {
+export function AddNewChatModal({
+  openDialog,
+  addChat,
+  closeForm,
+}: AddNewChatModalProp) {
   const [inputIsEmpty, setInputIsEmpty] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const navigate = useNavigate();
 
   function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -29,8 +31,8 @@ export function AddNewChat({ openDialog, addChat, closeForm }: AddChatProp) {
     }
 
     setInputIsEmpty(false);
+    addChat(inputValue);
     setInputValue("");
-    navigate("/chats");
   }
 
   function handleNameChange(
@@ -46,7 +48,13 @@ export function AddNewChat({ openDialog, addChat, closeForm }: AddChatProp) {
   }
 
   return (
-    <Dialog open={openDialog} onClose={closeForm}>
+    <Dialog
+      open={openDialog}
+      onClose={() => {
+        closeForm();
+        setInputValue("");
+      }}
+    >
       <Wrapper>
         <Title>Название нового чата</Title>
         <Form noValidate autoComplete="off" onSubmit={(e) => handleSubmit(e)}>
@@ -67,16 +75,14 @@ export function AddNewChat({ openDialog, addChat, closeForm }: AddChatProp) {
               fullWidth
               variant="outlined"
               type="button"
-              onClick={closeForm}
+              onClick={() => {
+                closeForm();
+                setInputValue("");
+              }}
             >
               Отмена
             </ButtonForm>
-            <ButtonForm
-              fullWidth
-              variant="contained"
-              type="submit"
-              onClick={() => addChat(inputValue)}
-            >
+            <ButtonForm fullWidth variant="contained" type="submit">
               Создать
             </ButtonForm>
           </ButtonWrapper>

@@ -5,7 +5,7 @@ import {
   MessagesWrapper,
   MessageText,
   MessageTime,
-} from "./MessagesStyle";
+} from "./Messages.styles";
 
 type MessagesProps = {
   author: string;

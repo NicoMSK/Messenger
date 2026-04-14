@@ -1,6 +1,6 @@
 import { AddNewChatButton } from "./AddNewChatButton";
-import { ChatsTitle, ChatsWrapper } from "./chatPageStyle";
-import { ChatsItem, ChatsLink, ChatsList } from "./ChatsListStyle";
+import { ChatsTitle, ChatsWrapper } from "../ChatPage.styles";
+import { ChatsItem, ChatsLink, ChatsList } from "./ChatsList.styles";
 
 export type ChatProp = {
   openAddChat: () => void;

@@ -9,7 +9,7 @@ import {
   LoginWrapper,
   LoginButtonForm,
   LoginButtonWrapper,
-} from "./LoginPageStyle";
+} from "./LoginPage.styles";
 
 export function LoginPage() {
   const [inputIsEmpty, setInputIsEmpty] = useState(false);

@@ -1,10 +1,10 @@
 import { useSearchParams } from "react-router-dom";
 import { useEscClose } from "../../shared/hooks/useEscClose";
-import { ChatsContent, ChatSection } from "./chatPageStyle";
-import { Chats } from "./ChatsList";
-import { AddNewChat } from "./AddNewChat";
+import { ChatsContent, ChatSection } from "./ChatPage.styles";
+import { Chats } from "./components/ChatsList";
+import { AddNewChatModal } from "./components/AddNewChatModal";
 import { useState } from "react";
-import { ChatWindow } from "./ChatWindow";
+import { ChatWindow } from "./components/ChatWindow";
 import { EmptyChatPage } from "../../shared/components/EmptyChatPage";
 
 const MOCK_INITIAL_CHATS = [
@@ -17,7 +17,6 @@ const MOCK_INITIAL_CHATS = [
 export function ChatPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const chatId = searchParams.get("chatId");
-  const [isAddChatFormOpen, setIsAddChatFormOpen] = useState(false);
   const [openAddNewChatModal, setOpenAddNewChatModal] = useState(false);
   const [chats, setChats] = useState(MOCK_INITIAL_CHATS);
 
@@ -36,45 +35,34 @@ export function ChatPage() {
       ];
     });
 
-    setIsAddChatFormOpen(false);
     setSearchParams({ chatId: newChatId });
+    setOpenAddNewChatModal(false);
   }
 
   function openAddChat() {
-    setSearchParams({});
     setOpenAddNewChatModal(true);
-    setIsAddChatFormOpen(true);
-  }
-
-  function renderContent() {
-    if (isAddChatFormOpen && !chatId) {
-      return (
-        <AddNewChat
-          openDialog={openAddNewChatModal}
-          addChat={addChat}
-          closeForm={closeModal}
-        />
-      );
-    }
-    if (chatId) {
-      return <ChatWindow />;
-    }
-
-    return <EmptyChatPage />;
   }
 
   function closeModal() {
-    setSearchParams({});
     setOpenAddNewChatModal(false);
-    setIsAddChatFormOpen(false);
   }
 
-  useEscClose(closeModal);
+  function closeChat() {
+    setSearchParams({});
+  }
+
+  useEscClose(closeModal, openAddNewChatModal);
+  useEscClose(closeChat, Boolean(chatId));
 
   return (
     <ChatSection>
+      <AddNewChatModal
+        openDialog={openAddNewChatModal}
+        addChat={addChat}
+        closeForm={closeModal}
+      />
       <Chats openAddChat={openAddChat} chatsData={chats} chatId={chatId} />
-      <ChatsContent>{renderContent()}</ChatsContent>
+      <ChatsContent>{chatId ? <ChatWindow /> : <EmptyChatPage />}</ChatsContent>
     </ChatSection>
   );
 }
