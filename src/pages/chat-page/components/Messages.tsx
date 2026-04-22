@@ -1,3 +1,4 @@
+import type { Message } from "../../../store/slices/chatSlice";
 import {
   MessageAuthor,
   MessageHeader,
@@ -7,13 +8,7 @@ import {
   MessageTime,
 } from "./Messages.styles";
 
-type MessagesProps = {
-  author: string;
-  time: string;
-  text: string;
-};
-
-export const Messages = (props: MessagesProps) => {
+export const Messages = (props: Message) => {
   const { author, time, text } = props;
 
   return (
@@ -23,7 +18,7 @@ export const Messages = (props: MessagesProps) => {
           <MessageAuthor>{author} </MessageAuthor>
           <MessageTime className="message-time">{time}</MessageTime>
         </MessageHeader>
-        <MessageText>{text} </MessageText>
+        <MessageText>{text}</MessageText>
       </MessageItem>
     </MessagesWrapper>
   );
