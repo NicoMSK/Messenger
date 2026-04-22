@@ -2,6 +2,7 @@ import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 
 export const ChatsWrapperForm = styled("div")({
+  marginTop: "auto",
   padding: "12px",
   borderTop: "1px solid #ddd",
 
