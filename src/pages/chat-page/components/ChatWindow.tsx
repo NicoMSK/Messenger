@@ -4,12 +4,16 @@ import type { RootState } from "../../../store/store";
 import { useSelector } from "react-redux";
 import { WrapperChatMessage } from "./ChatWindow.style";
 
-export function ChatWindow() {
-  const messages = useSelector((state: RootState) => state.message.messages);
+type ChatWindowProp = { chatId: string };
+
+export function ChatWindow({ chatId }: ChatWindowProp) {
+  const messages = useSelector(
+    (state: RootState) => state.chat.messages[chatId] ?? [],
+  );
 
   return (
     <>
-      {messages.length === 0 ? (
+      {messages?.length === 0 ? (
         <WrapperChatMessage>Тут нет сообщений</WrapperChatMessage>
       ) : (
         messages.map((mes) => (
@@ -22,8 +26,7 @@ export function ChatWindow() {
           />
         ))
       )}
-
-      <ChatForm />
+      <ChatForm chatId={chatId} />
     </>
   );
 }
