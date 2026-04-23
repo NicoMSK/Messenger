@@ -8,19 +8,30 @@ export type Message = {
 };
 
 type ChatState = {
-  messages: Message[];
+  messages: {
+    [chatId: string]: Message[];
+  };
 };
 
 const initialState: ChatState = {
-  messages: [],
+  messages: {},
 };
 
 export const chatSlice = createSlice({
   name: "message",
   initialState,
   reducers: {
-    addMessage: (state, action: PayloadAction<Message>) => {
-      state.messages.push(action.payload);
+    addMessage: (
+      state,
+      action: PayloadAction<{ chatId: string; message: Message }>,
+    ) => {
+      const { chatId, message } = action.payload;
+
+      if (!state.messages[chatId]) {
+        state.messages[chatId] = [];
+      }
+
+      state.messages[chatId].push(message);
     },
   },
 });
