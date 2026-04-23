@@ -11,7 +11,9 @@ import { useDispatch } from "react-redux";
 import { addMessage } from "../../../store/slices/chatSlice";
 import type { AppDispatch } from "../../../store/store";
 
-export function ChatForm() {
+type ChatFormProp = { chatId: string };
+
+export function ChatForm({ chatId }: ChatFormProp) {
   const [inputText, setInputText] = useState("");
   const dispatch: AppDispatch = useDispatch();
 
@@ -23,10 +25,13 @@ export function ChatForm() {
 
     dispatch(
       addMessage({
-        id: Date.now(),
-        text: inputText,
-        author: "user-1",
-        time: timeMessage,
+        chatId,
+        message: {
+          id: Date.now(),
+          text: inputText,
+          author: "user-1",
+          time: timeMessage,
+        },
       }),
     );
 
