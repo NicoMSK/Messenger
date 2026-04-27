@@ -2,10 +2,9 @@ import { ChatForm } from "./ChatForm";
 import { Messages } from "./Messages";
 import { WrapperChatMessage } from "./ChatWindow.style";
 import { useAppSelector } from "../../../store/store-hooks";
+import type { ChatProps } from "../../../shared/types/chat.types";
 
-type ChatWindowProp = { chatId: string };
-
-export function ChatWindow({ chatId }: ChatWindowProp) {
+export function ChatWindow({ chatId }: ChatProps) {
   const messages = useAppSelector((state) => state.chat.messages[chatId] ?? []);
 
   return (

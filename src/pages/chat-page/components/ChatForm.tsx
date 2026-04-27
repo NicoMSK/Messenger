@@ -9,10 +9,9 @@ import {
 import { useState } from "react";
 import { addMessage } from "../../../store/slices/chatSlice";
 import { useAppDispatch } from "../../../store/store-hooks";
+import type { ChatProps } from "../../../shared/types/chat.types";
 
-type ChatFormProp = { chatId: string };
-
-export function ChatForm({ chatId }: ChatFormProp) {
+export function ChatForm({ chatId }: ChatProps) {
   const [inputText, setInputText] = useState("");
   const dispatch = useAppDispatch();
 
