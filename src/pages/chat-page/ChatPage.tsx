@@ -62,7 +62,9 @@ export function ChatPage() {
         closeForm={closeModal}
       />
       <Chats openAddChat={openAddChat} chatsData={chats} chatId={chatId} />
-      <ChatsContent>{chatId ? <ChatWindow /> : <EmptyChatPage />}</ChatsContent>
+      <ChatsContent>
+        {chatId ? <ChatWindow chatId={chatId} /> : <EmptyChatPage />}
+      </ChatsContent>
     </ChatSection>
   );
 }

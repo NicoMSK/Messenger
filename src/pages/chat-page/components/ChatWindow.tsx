@@ -1,15 +1,28 @@
 import { ChatForm } from "./ChatForm";
 import { Messages } from "./Messages";
+import { WrapperChatMessage } from "./ChatWindow.style";
+import { useAppSelector } from "../../../store/store-hooks";
+import type { ChatProps } from "../../../shared/types/chat.types";
 
-export function ChatWindow() {
+export function ChatWindow({ chatId }: ChatProps) {
+  const messages = useAppSelector((state) => state.chat.messages[chatId] ?? []);
+
   return (
     <>
-      <Messages
-        author={"НИК нейм"}
-        time={"12:45 03.03.2026"}
-        text={"Сообщение"}
-      />
-      <ChatForm />
+      {messages?.length === 0 ? (
+        <WrapperChatMessage>Тут нет сообщений</WrapperChatMessage>
+      ) : (
+        messages.map((mes) => (
+          <Messages
+            key={mes.id}
+            id={mes.id}
+            author={mes.author}
+            time={mes.time}
+            text={mes.text}
+          />
+        ))
+      )}
+      <ChatForm chatId={chatId} />
     </>
   );
 }
