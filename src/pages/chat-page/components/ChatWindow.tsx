@@ -1,15 +1,12 @@
 import { ChatForm } from "./ChatForm";
 import { Messages } from "./Messages";
-import type { RootState } from "../../../store/store";
-import { useSelector } from "react-redux";
 import { WrapperChatMessage } from "./ChatWindow.style";
+import { useAppSelector } from "../../../store/store-hooks";
 
 type ChatWindowProp = { chatId: string };
 
 export function ChatWindow({ chatId }: ChatWindowProp) {
-  const messages = useSelector(
-    (state: RootState) => state.chat.messages[chatId] ?? [],
-  );
+  const messages = useAppSelector((state) => state.chat.messages[chatId] ?? []);
 
   return (
     <>

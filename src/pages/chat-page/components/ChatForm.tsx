@@ -7,15 +7,14 @@ import {
   ChatsWrapperForm,
 } from "./Messages.styles";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { addMessage } from "../../../store/slices/chatSlice";
-import type { AppDispatch } from "../../../store/store";
+import { useAppDispatch } from "../../../store/store-hooks";
 
 type ChatFormProp = { chatId: string };
 
 export function ChatForm({ chatId }: ChatFormProp) {
   const [inputText, setInputText] = useState("");
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleSend = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
