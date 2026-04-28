@@ -1,17 +1,16 @@
 import { AddNewChatButton } from "./AddNewChatButton";
 import { ChatsTitle, ChatsWrapper } from "../ChatPage.styles";
 import { ChatsItem, ChatsLink, ChatsList } from "./ChatsList.styles";
+import { useAppSelector } from "../../../store/store-hooks";
 
 export type ChatProp = {
   openAddChat: () => void;
-  chatsData: {
-    id: string;
-    title: string;
-  }[];
   chatId: string | null;
 };
 
-export function Chats({ openAddChat, chatsData, chatId }: ChatProp) {
+export function Chats({ openAddChat, chatId }: ChatProp) {
+  const chatsData = useAppSelector((state) => state.chat.chats);
+
   return (
     <ChatsWrapper>
       <ChatsTitle>Список чатов</ChatsTitle>

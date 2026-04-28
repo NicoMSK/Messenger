@@ -7,13 +7,13 @@ export type Message = {
   time: string;
 };
 
-type ChatState = {
+type MessageState = {
   messages: {
     [chatId: string]: Message[];
   };
 };
 
-const initialState: ChatState = {
+const initialState: MessageState = {
   messages: {},
 };
 
