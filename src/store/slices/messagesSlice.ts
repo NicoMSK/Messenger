@@ -17,7 +17,7 @@ const initialState: ChatState = {
   messages: {},
 };
 
-export const chatSlice = createSlice({
+export const messagesSlice = createSlice({
   name: "message",
   initialState,
   reducers: {
@@ -36,4 +36,4 @@ export const chatSlice = createSlice({
   },
 });
 
-export const { addMessage } = chatSlice.actions;
+export const { addMessage } = messagesSlice.actions;

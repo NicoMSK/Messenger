@@ -7,7 +7,7 @@ import {
   ChatsWrapperForm,
 } from "./Messages.styles";
 import { useState } from "react";
-import { addMessage } from "../../../store/slices/chatSlice";
+import { addMessage } from "../../../store/slices/messagesSlice";
 import { useAppDispatch } from "../../../store/store-hooks";
 import type { ChatProps } from "../../../shared/types/chat.types";
 
