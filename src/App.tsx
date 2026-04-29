@@ -8,7 +8,7 @@ export default function App() {
     <ScopedCssBaseline>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/chats/" element={<ChatPage />} />
         </Routes>
       </BrowserRouter>
