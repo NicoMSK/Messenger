@@ -14,27 +14,6 @@ export const ChatsContent = styled("div")({
   flexDirection: "column",
 });
 
-export const ChatsWrapper = styled("div")({
-  width: "280px",
-  display: "flex",
-  flexDirection: "column",
-
-  overflowY: "auto",
-  borderRight: "1px solid #ddd",
-
-  backgroundColor: COLOR.background.chatsWrapper,
-});
-
-export const ChatsTitle = styled("h1")({
-  margin: 0,
-  padding: "16px",
-
-  fontSize: "20px",
-  fontWeight: 600,
-
-  borderBottom: "1px solid #eee",
-});
-
 export const EmptyChat = styled("div")({
   height: "100vh",
   display: "flex",

@@ -1,8 +1,13 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-type Chat = { id: string; title: string };
+type Chat = {
+  id: string;
+  title: string;
+};
 
-type ChatState = { chats: Chat[] };
+type ChatState = {
+  chats: Chat[];
+};
 
 const initialState: ChatState = {
   chats: [

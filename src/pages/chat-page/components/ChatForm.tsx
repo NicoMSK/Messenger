@@ -8,12 +8,14 @@ import {
 } from "./Messages.styles";
 import { useState } from "react";
 import { addMessage } from "../../../store/slices/messagesSlice";
-import { useAppDispatch } from "../../../store/store-hooks";
+import { useAppDispatch, useAppSelector } from "../../../store/store-hooks";
 import type { ChatProps } from "../../../shared/types/chat.types";
 
 export function ChatForm({ chatId }: ChatProps) {
   const [inputText, setInputText] = useState("");
   const dispatch = useAppDispatch();
+  const author =
+    useAppSelector((state) => state.auth.currentUser?.name) || "Гость";
 
   const handleSend = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,7 +29,7 @@ export function ChatForm({ chatId }: ChatProps) {
         message: {
           id: Date.now(),
           text: inputText,
-          author: "user-1",
+          author: author,
           time: timeMessage,
         },
       }),
