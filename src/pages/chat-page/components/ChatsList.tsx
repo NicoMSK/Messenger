@@ -22,7 +22,9 @@ export function Chats({ openAddChat, chatId }: ChatProp) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const chatsData = useAppSelector((state) => state.chat.chats);
-  const currentUser = useAppSelector((state) => state.auth.currentUser);
+  const currentUser = useAppSelector(
+    (state) => state.auth.currentUser?.name || "Гость",
+  );
 
   function handleLogout() {
     dispatch(logout());
@@ -33,8 +35,7 @@ export function Chats({ openAddChat, chatId }: ChatProp) {
     <ChatsWrapper>
       <ChatsTitle>Список чатов</ChatsTitle>
       <ChatsCurrentUser>
-        Вы вошли как:{" "}
-        <ChatsCurrentUserName>{currentUser?.name}</ChatsCurrentUserName>
+        Вы вошли как: <ChatsCurrentUserName>{currentUser}</ChatsCurrentUserName>
       </ChatsCurrentUser>
       <ChatsList>
         {chatsData.map((chat) => (
