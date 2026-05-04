@@ -24,7 +24,7 @@ export function ChatWindow({ chatId }: ChatProps) {
           />
         ))
       )}
-      <ChatForm chatId={chatId} />
+      <ChatForm key={chatId} chatId={chatId} />
     </>
   );
 }
