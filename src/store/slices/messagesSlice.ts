@@ -7,17 +7,17 @@ export type Message = {
   time: string;
 };
 
-type ChatState = {
+type MessageState = {
   messages: {
     [chatId: string]: Message[];
   };
 };
 
-const initialState: ChatState = {
+const initialState: MessageState = {
   messages: {},
 };
 
-export const chatSlice = createSlice({
+export const messagesSlice = createSlice({
   name: "message",
   initialState,
   reducers: {
@@ -36,4 +36,4 @@ export const chatSlice = createSlice({
   },
 });
 
-export const { addMessage } = chatSlice.actions;
+export const { addMessage } = messagesSlice.actions;

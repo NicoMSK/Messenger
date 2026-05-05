@@ -5,7 +5,9 @@ import { useAppSelector } from "../../../store/store-hooks";
 import type { ChatProps } from "../../../shared/types/chat.types";
 
 export function ChatWindow({ chatId }: ChatProps) {
-  const messages = useAppSelector((state) => state.chat.messages[chatId] ?? []);
+  const messages = useAppSelector(
+    (state) => state.message.messages[chatId] ?? [],
+  );
 
   return (
     <>
@@ -22,7 +24,7 @@ export function ChatWindow({ chatId }: ChatProps) {
           />
         ))
       )}
-      <ChatForm chatId={chatId} />
+      <ChatForm key={chatId} chatId={chatId} />
     </>
   );
 }

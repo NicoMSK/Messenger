@@ -10,11 +10,14 @@ import {
   LoginButtonForm,
   LoginButtonWrapper,
 } from "./LoginPage.styles";
+import { useAppDispatch } from "../../store/store-hooks";
+import { login } from "../../store/slices/authSlice";
 
 export function LoginPage() {
   const [inputIsEmpty, setInputIsEmpty] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -23,6 +26,8 @@ export function LoginPage() {
       setInputIsEmpty(true);
       return;
     }
+
+    dispatch(login({ id: crypto.randomUUID(), name: inputValue }));
 
     setInputIsEmpty(false);
     setInputValue("");

@@ -1,9 +1,45 @@
 import { styled } from "@mui/material/styles";
 import { NavLink } from "react-router-dom";
+import { COLOR } from "../../styleVariables";
 
 type ChatsLinkProps = {
   isActive: boolean;
 };
+
+export const ChatsWrapper = styled("div")({
+  width: "280px",
+  display: "flex",
+  flexDirection: "column",
+
+  overflowY: "auto",
+  borderRight: "1px solid #ddd",
+
+  backgroundColor: COLOR.background.chatsWrapper,
+});
+
+export const ChatsTitle = styled("h1")({
+  margin: 0,
+  padding: "16px",
+
+  fontSize: "20px",
+  fontWeight: 600,
+
+  borderBottom: "1px solid #eee",
+});
+
+export const ChatsCurrentUser = styled("div")({
+  margin: 0,
+  padding: "16px",
+
+  fontSize: "14px",
+
+  borderBottom: "1px solid #eee",
+});
+
+export const ChatsCurrentUserName = styled("span")({
+  fontSize: "16px",
+  fontWeight: 700,
+});
 
 export const ChatsList = styled("ul")({
   overflowY: "auto",

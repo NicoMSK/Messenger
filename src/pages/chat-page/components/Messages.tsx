@@ -1,4 +1,4 @@
-import type { Message } from "../../../store/slices/chatSlice";
+import type { Message } from "../../../store/slices/messagesSlice";
 import {
   MessageAuthor,
   MessageHeader,
