@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import { Server as SocketIOServer } from "socket.io";
+import morgan from "morgan";
 
 import { createAuthRouter } from "./routes/auth.js";
 import { createChatRouter } from "./routes/chat.js";
@@ -23,6 +24,8 @@ export function startServer({ port, clientUrl }: StartServerOptions) {
     }),
   );
 
+  app.use(morgan("combined"));
+
   const httpServer = http.createServer(app);
   const io = new SocketIOServer(httpServer, {
     cors: {
@@ -40,4 +43,3 @@ export function startServer({ port, clientUrl }: StartServerOptions) {
     console.log(`Backend listening on http://localhost:${port}`);
   });
 }
-

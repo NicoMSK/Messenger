@@ -1,31 +1,14 @@
 import type { Server as SocketIOServer, Socket } from "socket.io";
 
 import { ensureSeedData, getChatById } from "../store/store.js";
-import { addUserToRoom, getMessages, removeUserFromRoom, saveMessage } from "../services/chatService.js";
+import {
+  addUserToRoom,
+  getMessages,
+  removeUserFromRoom,
+  saveMessage,
+} from "../services/chatService.js";
 import type { HistoryEvent, MessageNewEvent } from "../types/index.js";
 
-/**
- * Контракт для фронта (React + Redux)
- *
- * Подключение:
- * - URL: `http://localhost:4000` (или PORT)
- * - В query передавать `chatId`, чтобы сразу получить историю и подписаться на комнату:
- *   - пример: `io("http://localhost:4000", { query: { chatId } })`
- *
- * Входящие события:
- * - `history` -> { type: "history", messages: Message[] }
- *   - диспатчить в Redux как "загрузить историю чата"
- * - `message:new` -> { type: "message", message: Message }
- *   - диспатчить в Redux как "добавить сообщение"
- * - `chat:created` -> { type: "chat:created", chat: Chat }
- *   - это событие отправляется REST-роутом при `POST /chat`, чтобы обновить список чатов без перезагрузки
- *
- * Исходящие события (клиент -> сервер):
- * - `message:send` с payload { chatId, userName, content }
- *
- * Ошибки:
- * - `error` -> { message: string }
- */
 type MessageSendPayload = {
   chatId: string;
   userName: string;
@@ -48,15 +31,21 @@ export function initSocket(io: SocketIOServer) {
     if (chatId && getChatById(chatId)) {
       socket.join(chatId);
 
-      const history: HistoryEvent = { type: "history", messages: getMessages(chatId) };
+      const history: HistoryEvent = {
+        type: "history",
+        messages: getMessages(chatId),
+      };
       socket.emit("history", history);
     }
 
     socket.on("message:send", (payload: MessageSendPayload) => {
       try {
-        const chatIdValue = typeof payload?.chatId === "string" ? payload.chatId.trim() : "";
-        const userNameValue = typeof payload?.userName === "string" ? payload.userName.trim() : "";
-        const contentValue = typeof payload?.content === "string" ? payload.content.trim() : "";
+        const chatIdValue =
+          typeof payload?.chatId === "string" ? payload.chatId.trim() : "";
+        const userNameValue =
+          typeof payload?.userName === "string" ? payload.userName.trim() : "";
+        const contentValue =
+          typeof payload?.content === "string" ? payload.content.trim() : "";
 
         if (!chatIdValue) {
           socket.emit("error", { message: "chatId is required" });
@@ -101,4 +90,3 @@ export function initSocket(io: SocketIOServer) {
     });
   });
 }
-
