@@ -1,0 +1,20 @@
+- Контракт для фронта (React + Redux)
+-
+- Подключение:
+- - URL: `http://localhost:4000` (или PORT)
+- - В query передавать `chatId`, чтобы сразу получить историю и подписаться на комнату:
+- - пример: `io("http://localhost:4000", { query: { chatId } })`
+-
+- Входящие события:
+- - `history` -> { type: "history", messages: Message[] }
+- - диспатчить в Redux как "загрузить историю чата"
+- - `message:new` -> { type: "message", message: Message }
+- - диспатчить в Redux как "добавить сообщение"
+- - `chat:created` -> { type: "chat:created", chat: Chat }
+- - это событие отправляется REST-роутом при `POST /chat`, чтобы обновить список чатов без перезагрузки
+-
+- Исходящие события (клиент -> сервер):
+- - `message:send` с payload { chatId, userName, content }
+-
+- Ошибки:
+- - `error` -> { message: string }
