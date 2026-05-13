@@ -44,7 +44,7 @@ export function Chats({ openAddChat, chatId }: ChatProp) {
               isActive={chatId === chat.id}
               to={`/chats?chatId=${chat.id}`}
             >
-              {chat.title}
+              {chat.name}
             </ChatsLink>
           </ChatsItem>
         ))}

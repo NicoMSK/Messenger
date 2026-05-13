@@ -3,11 +3,12 @@ import { useEscClose } from "../../shared/hooks/useEscClose";
 import { ChatsContent, ChatSection } from "./ChatPage.styles";
 import { Chats } from "./components/ChatsList";
 import { AddNewChatModal } from "./components/AddNewChatModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChatWindow } from "./components/ChatWindow";
 import { EmptyChatPage } from "../../shared/components/EmptyChatPage";
 import { useAppDispatch } from "../../store/store-hooks";
-import { addChat } from "../../store/slices/chatsSlice";
+import { addChat, setChats } from "../../store/slices/chatsSlice";
+import { getChats } from "../../api/chatApi";
 
 export function ChatPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -15,12 +16,20 @@ export function ChatPage() {
   const [openAddNewChatModal, setOpenAddNewChatModal] = useState(false);
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    const fetchChats = async () => {
+      const chats = await getChats();
+      dispatch(setChats(chats));
+    };
+    fetchChats();
+  }, []);
+
   function addNewChat(inputValue: string) {
     const newChatId = crypto.randomUUID();
 
     if (inputValue.trim().length === 0) return;
 
-    dispatch(addChat({ id: newChatId, title: inputValue }));
+    dispatch(addChat({ id: newChatId, name: inputValue }));
     setSearchParams({ chatId: newChatId });
     setOpenAddNewChatModal(false);
   }
