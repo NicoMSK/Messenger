@@ -23,7 +23,10 @@ export const chatSlice = createSlice({
     addChat: (state, action: PayloadAction<Chat>) => {
       state.chats.push(action.payload);
     },
+    deleteChat: (state, action: PayloadAction<string>) => {
+      state.chats = state.chats.filter((chat) => chat.id !== action.payload);
+    },
   },
 });
 
-export const { setChats, addChat } = chatSlice.actions;
+export const { setChats, addChat, deleteChat } = chatSlice.actions;

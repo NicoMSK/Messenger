@@ -35,3 +35,20 @@ export async function createChat(nameChat: string) {
     return null;
   }
 }
+
+export async function deleteChatApi(idChat: string) {
+  try {
+    const response = await fetch(`${HOST_URL}/chat/${idChat}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Запрос вернулся с ошибкой ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Ошибка при удалении чата:", error);
+    return null;
+  }
+}

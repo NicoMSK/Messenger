@@ -7,18 +7,21 @@ import {
   ChatsList,
   ChatsTitle,
   ChatsWrapper,
+  DeleteChatButton,
 } from "./ChatsList.styles";
 import { useAppDispatch, useAppSelector } from "../../../store/store-hooks";
 import { logout } from "../../../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { ExitButton } from "../../../shared/components/ExitButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export type ChatProp = {
   openAddChat: () => void;
+  removeChat: (idChat: string) => void;
   chatId: string | null;
 };
 
-export function Chats({ openAddChat, chatId }: ChatProp) {
+export function Chats({ openAddChat, removeChat, chatId }: ChatProp) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const chatsData = useAppSelector((state) => state.chat.chats);
@@ -46,6 +49,13 @@ export function Chats({ openAddChat, chatId }: ChatProp) {
             >
               {chat.name}
             </ChatsLink>
+            <DeleteChatButton
+              onClick={() => removeChat(chat.id)}
+              aria-label="delete"
+              size="small"
+            >
+              <DeleteIcon fontSize="inherit" />
+            </DeleteChatButton>
           </ChatsItem>
         ))}
       </ChatsList>

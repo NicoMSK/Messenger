@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 import { ChatWindow } from "./components/ChatWindow";
 import { EmptyChatPage } from "../../shared/components/EmptyChatPage";
 import { useAppDispatch } from "../../store/store-hooks";
-import { addChat, setChats } from "../../store/slices/chatsSlice";
-import { createChat, getChats } from "../../api/chatApi";
+import { addChat, deleteChat, setChats } from "../../store/slices/chatsSlice";
+import { createChat, deleteChatApi, getChats } from "../../api/chatApi";
 
 export function ChatPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -37,6 +37,21 @@ export function ChatPage() {
     setOpenAddNewChatModal(false);
   }
 
+  async function removeChat(idChat: string) {
+    const result = await deleteChatApi(idChat);
+
+    if (!result) {
+      console.error("Failed to delete chat");
+      return;
+    }
+
+    dispatch(deleteChat(idChat));
+    
+    if (chatId === idChat) {
+      setSearchParams({});
+    }
+  }
+
   function openAddChat() {
     setOpenAddNewChatModal(true);
   }
@@ -59,7 +74,11 @@ export function ChatPage() {
         addChat={addNewChat}
         closeForm={closeModal}
       />
-      <Chats openAddChat={openAddChat} chatId={chatId} />
+      <Chats
+        openAddChat={openAddChat}
+        removeChat={removeChat}
+        chatId={chatId}
+      />
       <ChatsContent>
         {chatId ? <ChatWindow chatId={chatId} /> : <EmptyChatPage />}
       </ChatsContent>
