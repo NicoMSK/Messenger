@@ -8,7 +8,7 @@ import { ChatWindow } from "./components/ChatWindow";
 import { EmptyChatPage } from "../../shared/components/EmptyChatPage";
 import { useAppDispatch } from "../../store/store-hooks";
 import { addChat, setChats } from "../../store/slices/chatsSlice";
-import { getChats } from "../../api/chatApi";
+import { createChat, getChats } from "../../api/chatApi";
 
 export function ChatPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -24,13 +24,16 @@ export function ChatPage() {
     fetchChats();
   }, []);
 
-  function addNewChat(inputValue: string) {
-    const newChatId = crypto.randomUUID();
+  async function addNewChat(inputValue: string) {
+    const newChat = await createChat(inputValue);
 
-    if (inputValue.trim().length === 0) return;
+    if (!newChat) {
+      console.error("Failed to create chat");
+      return;
+    }
 
-    dispatch(addChat({ id: newChatId, name: inputValue }));
-    setSearchParams({ chatId: newChatId });
+    dispatch(addChat(newChat));
+    setSearchParams({ chatId: newChat.id });
     setOpenAddNewChatModal(false);
   }
 
