@@ -24,7 +24,7 @@ export function startServer({ port, clientUrl }: StartServerOptions) {
     }),
   );
 
-  app.use(morgan("combined"));
+  app.use(morgan("dev"));
 
   const httpServer = http.createServer(app);
   const io = new SocketIOServer(httpServer, {

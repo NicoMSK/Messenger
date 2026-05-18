@@ -14,6 +14,7 @@ import { logout } from "../../../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { ExitButton } from "../../../shared/components/ExitButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { logoutUser } from "../../../api/loginApi";
 
 export type ChatProp = {
   openAddChat: () => void;
@@ -29,9 +30,12 @@ export function Chats({ openAddChat, removeChat, chatId }: ChatProp) {
     (state) => state.auth.currentUser?.name || "Гость",
   );
 
-  function handleLogout() {
-    dispatch(logout());
-    navigate("/login");
+  async function handleLogout() {
+    const isUserExit = await logoutUser(currentUser);
+    if (isUserExit) {
+      dispatch(logout());
+      navigate("/login");
+    }
   }
 
   return (
