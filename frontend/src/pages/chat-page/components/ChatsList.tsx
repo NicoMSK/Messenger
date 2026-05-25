@@ -1,3 +1,4 @@
+import Badge from "@mui/material/Badge";
 import { AddNewChatButton } from "./AddNewChatButton";
 import {
   ChatsCurrentUser,
@@ -26,6 +27,7 @@ export function Chats({ openAddChat, removeChat, chatId }: ChatProp) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const chatsData = useAppSelector((state) => state.chat.chats);
+  const unread = useAppSelector((state) => state.message.unread);
   const currentUser = useAppSelector(
     (state) => state.auth.currentUser?.name || "Гость",
   );
@@ -51,7 +53,13 @@ export function Chats({ openAddChat, removeChat, chatId }: ChatProp) {
               isActive={chatId === chat.id}
               to={`/chats?chatId=${chat.id}`}
             >
-              {chat.name}
+              <Badge
+                badgeContent={unread[chat.id] ?? 0}
+                color="error"
+                sx={{ width: "100%" }}
+              >
+                {chat.name}
+              </Badge>
             </ChatsLink>
             <DeleteChatButton
               onClick={() => removeChat(chat.id)}
