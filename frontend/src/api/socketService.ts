@@ -63,14 +63,17 @@ export const socketService = {
 
   openChatWhenReady(chatId: string) {
     if (!ws) return;
-    if (ws.readyState === WebSocket.OPEN) {
-      ws.send(JSON.stringify({ type: "open", chatId }));
+    const targetWs = ws;
+    if (targetWs.readyState === WebSocket.OPEN) {
+      targetWs.send(JSON.stringify({ type: "open", chatId }));
     } else {
       const onOpen = () => {
-        ws?.send(JSON.stringify({ type: "open", chatId }));
-        ws?.removeEventListener("open", onOpen);
+        if (targetWs.readyState === WebSocket.OPEN) {
+          targetWs.send(JSON.stringify({ type: "open", chatId }));
+        }
+        targetWs.removeEventListener("open", onOpen);
       };
-      ws.addEventListener("open", onOpen);
+      targetWs.addEventListener("open", onOpen);
     }
   },
 
