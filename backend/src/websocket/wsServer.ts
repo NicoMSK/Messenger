@@ -10,7 +10,13 @@ function wsLog(event: string, req: IncomingMessage, extra?: string) {
   const now = new Date().toISOString();
   const url = req.url ?? "/ws";
   const ip = req.socket.remoteAddress ?? "-";
-  const parts = [`[${now}]`, "WS", event.toUpperCase().padEnd(10), url, `ip=${ip}`];
+  const parts = [
+    `[${now}]`,
+    "WS",
+    event.toUpperCase().padEnd(10),
+    url,
+    `ip=${ip}`,
+  ];
   if (extra) parts.push(extra);
   console.log(parts.join(" "));
 }
@@ -60,10 +66,15 @@ export function initWsServer(server: Server) {
     ws.on("message", (raw) => {
       try {
         const payload = JSON.parse(raw.toString());
-        wsLog("message", req, `type=${payload?.type ?? "unknown"}`);
+        wsLog(
+          "message",
+          req,
+          `${payload?.type ? JSON.stringify(payload) : "unknown"}`,
+        );
 
         if (payload?.type === "open") {
-          const chatId = typeof payload.chatId === "string" ? payload.chatId.trim() : "";
+          const chatId =
+            typeof payload.chatId === "string" ? payload.chatId.trim() : "";
           if (!chatId || !getChatById(chatId)) {
             send(ws, { type: "error", message: "chat not found" });
             return;
@@ -78,8 +89,10 @@ export function initWsServer(server: Server) {
         }
 
         if (payload?.type === "message:send") {
-          const chatId = typeof payload.chatId === "string" ? payload.chatId.trim() : "";
-          const content = typeof payload.content === "string" ? payload.content.trim() : "";
+          const chatId =
+            typeof payload.chatId === "string" ? payload.chatId.trim() : "";
+          const content =
+            typeof payload.content === "string" ? payload.content.trim() : "";
 
           if (!chatId || !getChatById(chatId)) {
             send(ws, { type: "error", message: "chat not found" });
@@ -103,6 +116,8 @@ export function initWsServer(server: Server) {
           return;
         }
       } catch {
+        wsLog("message", req, `type=unparsed, ${raw}`);
+
         send(ws, { type: "error", message: "invalid message format" });
       }
     });
@@ -113,3 +128,4 @@ export function initWsServer(server: Server) {
     });
   });
 }
+
