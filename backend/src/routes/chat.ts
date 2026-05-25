@@ -1,10 +1,9 @@
 import { Router } from "express";
-import type { Server as SocketIOServer } from "socket.io";
 
 import { createChat, deleteChat, getChats, updateChat } from "../store/store.js";
 import type { ChatCreatedEvent } from "../types/index.js";
 
-export function createChatRouter(io: SocketIOServer) {
+export function createChatRouter(broadcastAll: (data: object) => void) {
   const router = Router();
 
   router.get("/chat", (_req, res) => {
@@ -12,16 +11,16 @@ export function createChatRouter(io: SocketIOServer) {
   });
 
   router.post("/chat", (req, res) => {
-    const name = typeof req.body?.name === "string" ? req.body.name.trim() : "";
+    const name =
+      typeof req.body?.name === "string" ? req.body.name.trim() : "";
 
     if (!name) {
       return res.status(400).json({ message: "name is required" });
     }
 
     const chat = createChat(name);
-
     const event: ChatCreatedEvent = { type: "chat:created", chat };
-    io.emit("chat:created", event);
+    broadcastAll(event);
 
     return res.status(201).json(chat);
   });
