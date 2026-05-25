@@ -61,20 +61,21 @@ export const socketService = {
     }
   },
 
-  openChatWhenReady(chatId: string) {
-    if (!ws) return;
+  openChatWhenReady(chatId: string): () => void {
+    if (!ws) return () => {};
     const targetWs = ws;
     if (targetWs.readyState === WebSocket.OPEN) {
       targetWs.send(JSON.stringify({ type: "open", chatId }));
-    } else {
-      const onOpen = () => {
-        if (targetWs.readyState === WebSocket.OPEN) {
-          targetWs.send(JSON.stringify({ type: "open", chatId }));
-        }
-        targetWs.removeEventListener("open", onOpen);
-      };
-      targetWs.addEventListener("open", onOpen);
+      return () => {};
     }
+    const onOpen = () => {
+      if (targetWs.readyState === WebSocket.OPEN) {
+        targetWs.send(JSON.stringify({ type: "open", chatId }));
+      }
+      targetWs.removeEventListener("open", onOpen);
+    };
+    targetWs.addEventListener("open", onOpen);
+    return () => targetWs.removeEventListener("open", onOpen);
   },
 
   sendMessage(chatId: string, content: string) {

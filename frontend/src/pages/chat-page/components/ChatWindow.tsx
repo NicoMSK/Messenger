@@ -14,8 +14,9 @@ export function ChatWindow({ chatId }: ChatProps) {
   );
 
   useEffect(() => {
-    socketService.openChatWhenReady(chatId);
+    const cancel = socketService.openChatWhenReady(chatId);
     dispatch(clearUnread(chatId));
+    return cancel;
   }, [chatId, dispatch]);
 
   return (
