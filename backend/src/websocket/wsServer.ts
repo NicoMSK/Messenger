@@ -5,6 +5,15 @@ import { URL } from "url";
 import { ensureSeedData, getChatById } from "../store/store.js";
 import { addUserToRoom, getMessages, saveMessage } from "../services/chatService.js";
 
+function wsLog(event: string, req: IncomingMessage, extra?: string) {
+  const now = new Date().toISOString();
+  const url = req.url ?? "/ws";
+  const ip = req.socket.remoteAddress ?? "-";
+  const parts = [`[${now}]`, "WS", event.toUpperCase().padEnd(10), url, `ip=${ip}`];
+  if (extra) parts.push(extra);
+  console.log(parts.join(" "));
+}
+
 type Room = Set<WebSocket>;
 const rooms = new Map<string, Room>();
 
@@ -52,6 +61,7 @@ export function initWsServer(server: Server) {
 
   wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
     const chatId = getChatIdFromRequest(req);
+    wsLog("connect", req, chatId ? `chatId=${chatId}` : "no chatId");
 
     if (chatId && getChatById(chatId)) {
       getRoom(chatId).add(ws);
@@ -63,6 +73,7 @@ export function initWsServer(server: Server) {
     ws.on("message", (raw) => {
       try {
         const payload = JSON.parse(raw.toString());
+        wsLog("message", req, `type=${payload?.type ?? "unknown"}`);
         if (payload?.type !== "message:send") return;
 
         const chatIdValue =
@@ -104,6 +115,7 @@ export function initWsServer(server: Server) {
     });
 
     ws.on("close", () => {
+      wsLog("disconnect", req, chatId ? `chatId=${chatId}` : "no chatId");
       if (chatId) {
         getRoom(chatId).delete(ws);
       }
