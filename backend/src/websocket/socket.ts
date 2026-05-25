@@ -31,10 +31,10 @@ export function initSocket(io: SocketIOServer) {
     if (chatId && getChatById(chatId)) {
       socket.join(chatId);
 
-      const history: HistoryEvent = {
-        type: "history",
+      const history = {
+        type: "history" as const,
         messages: getMessages(chatId),
-      };
+      } as HistoryEvent;
       socket.emit("history", history);
     }
 
@@ -72,7 +72,7 @@ export function initSocket(io: SocketIOServer) {
           return;
         }
 
-        const out: MessageNewEvent = { type: "message", message };
+        const out = { type: "message:new" as const, chatId: chatIdValue, message } as MessageNewEvent;
         io.to(chatIdValue).emit("message:new", out);
       } catch {
         socket.emit("error", { message: "unexpected error" });
