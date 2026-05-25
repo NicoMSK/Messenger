@@ -1,20 +1,37 @@
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useEscClose } from "../../shared/hooks/useEscClose";
 import { ChatsContent, ChatSection } from "./ChatPage.styles";
 import { Chats } from "./components/ChatsList";
 import { AddNewChatModal } from "./components/AddNewChatModal";
-import { useEffect, useState } from "react";
 import { ChatWindow } from "./components/ChatWindow";
 import { EmptyChatPage } from "../../shared/components/EmptyChatPage";
-import { useAppDispatch } from "../../store/store-hooks";
+import { useAppDispatch, useAppSelector } from "../../store/store-hooks";
 import { addChat, deleteChat, setChats } from "../../store/slices/chatsSlice";
+import {
+  addMessage,
+  incrementUnread,
+  setMessages,
+} from "../../store/slices/messagesSlice";
 import { createChat, deleteChatApi, getChats } from "../../api/chatApi";
+import {
+  socketService,
+  mapBackendMessage,
+  type WsEvent,
+} from "../../api/socketService";
 
 export function ChatPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const chatId = searchParams.get("chatId");
   const [openAddNewChatModal, setOpenAddNewChatModal] = useState(false);
   const dispatch = useAppDispatch();
+  const currentUser = useAppSelector((state) => state.auth.currentUser);
+
+  // Keep latest chatId accessible inside the stable handler without re-subscribing
+  const activeChatIdRef = useRef<string | null>(chatId);
+  useEffect(() => {
+    activeChatIdRef.current = chatId;
+  }, [chatId]);
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -24,14 +41,46 @@ export function ChatPage() {
     fetchChats();
   }, []);
 
+  const globalHandler = useCallback(
+    (event: WsEvent) => {
+      if (event.type === "history") {
+        dispatch(
+          setMessages({
+            chatId: event.chatId,
+            messages: event.messages.map(mapBackendMessage),
+          }),
+        );
+      } else if (event.type === "message:new") {
+        dispatch(
+          addMessage({
+            chatId: event.chatId,
+            message: mapBackendMessage(event.message),
+          }),
+        );
+        if (event.chatId !== activeChatIdRef.current) {
+          dispatch(incrementUnread(event.chatId));
+        }
+      }
+    },
+    [dispatch],
+  );
+
+  useEffect(() => {
+    if (!currentUser) return;
+    socketService.connect(currentUser.name);
+    socketService.addHandler(globalHandler);
+    return () => {
+      socketService.removeHandler(globalHandler);
+      socketService.disconnect();
+    };
+  }, [currentUser, globalHandler]);
+
   async function addNewChat(inputValue: string) {
     const newChat = await createChat(inputValue);
-
     if (!newChat) {
       console.error("Failed to create chat");
       return;
     }
-
     dispatch(addChat(newChat));
     setSearchParams({ chatId: newChat.id });
     setOpenAddNewChatModal(false);
@@ -39,14 +88,11 @@ export function ChatPage() {
 
   async function removeChat(idChat: string) {
     const result = await deleteChatApi(idChat);
-
     if (!result) {
       console.error("Failed to delete chat");
       return;
     }
-
     dispatch(deleteChat(idChat));
-    
     if (chatId === idChat) {
       setSearchParams({});
     }
