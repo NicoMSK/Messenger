@@ -11,10 +11,14 @@ type MessageState = {
   messages: {
     [chatId: string]: Message[];
   };
+  unread: {
+    [chatId: string]: number;
+  };
 };
 
 const initialState: MessageState = {
   messages: {},
+  unread: {},
 };
 
 export const messagesSlice = createSlice({
@@ -38,7 +42,16 @@ export const messagesSlice = createSlice({
       }
       state.messages[chatId].push(message);
     },
+    incrementUnread: (state, action: PayloadAction<string>) => {
+      const chatId = action.payload;
+      state.unread[chatId] = (state.unread[chatId] ?? 0) + 1;
+    },
+    clearUnread: (state, action: PayloadAction<string>) => {
+      const chatId = action.payload;
+      state.unread[chatId] = 0;
+    },
   },
 });
 
-export const { setMessages, addMessage } = messagesSlice.actions;
+export const { setMessages, addMessage, incrementUnread, clearUnread } =
+  messagesSlice.actions;
