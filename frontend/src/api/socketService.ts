@@ -10,9 +10,16 @@ type BackendMessage = {
   createdAt: number;
 };
 
+type BackendChat = {
+  id: string;
+  name: string;
+  createdAt: number;
+};
+
 export type WsEvent =
   | { type: "history"; chatId: string; messages: BackendMessage[] }
   | { type: "message:new"; chatId: string; message: BackendMessage }
+  | { type: "chat:created"; chat: BackendChat }
   | { type: "error"; message: string };
 
 type EventHandler = (event: WsEvent) => void;

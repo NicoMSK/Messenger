@@ -60,6 +60,8 @@ export function ChatPage() {
         if (event.chatId !== activeChatIdRef.current) {
           dispatch(incrementUnread(event.chatId));
         }
+      } else if (event.type === "chat:created") {
+        dispatch(addChat({ id: event.chat.id, name: event.chat.name }));
       }
     },
     [dispatch],
