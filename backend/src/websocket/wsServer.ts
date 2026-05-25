@@ -3,7 +3,8 @@ import type { IncomingMessage, Server } from "http";
 import { URL } from "url";
 
 import { ensureSeedData, getChatById } from "../store/store.js";
-import { addUserToRoom, getMessages, saveMessage } from "../services/chatService.js";
+import { getMessages, saveMessage } from "../services/chatService.js";
+import type { HistoryEvent, MessageNewEvent } from "../types/index.js";
 
 function wsLog(event: string, req: IncomingMessage, extra?: string) {
   const now = new Date().toISOString();
@@ -14,13 +15,8 @@ function wsLog(event: string, req: IncomingMessage, extra?: string) {
   console.log(parts.join(" "));
 }
 
-type Room = Set<WebSocket>;
-const rooms = new Map<string, Room>();
-
-function getRoom(chatId: string): Room {
-  if (!rooms.has(chatId)) rooms.set(chatId, new Set());
-  return rooms.get(chatId)!;
-}
+// All connected clients: ws → userName
+const clients = new Map<WebSocket, string>();
 
 function send(ws: WebSocket, data: object) {
   if (ws.readyState === WebSocket.OPEN) {
@@ -28,27 +24,17 @@ function send(ws: WebSocket, data: object) {
   }
 }
 
-export function broadcast(chatId: string, data: object) {
-  const room = rooms.get(chatId);
-  if (!room) return;
-  for (const client of room) {
-    send(client, data);
-  }
-}
-
 export function broadcastAll(data: object) {
-  for (const room of rooms.values()) {
-    for (const client of room) {
-      send(client, data);
-    }
+  for (const ws of clients.keys()) {
+    send(ws, data);
   }
 }
 
-function getChatIdFromRequest(req: IncomingMessage): string | null {
+function getUserNameFromRequest(req: IncomingMessage): string | null {
   try {
     const url = new URL(req.url!, "http://localhost");
-    const chatId = url.searchParams.get("chatId")?.trim();
-    return chatId || null;
+    const userName = url.searchParams.get("userName")?.trim();
+    return userName || null;
   } catch {
     return null;
   }
@@ -60,65 +46,70 @@ export function initWsServer(server: Server) {
   const wss = new WebSocketServer({ server, path: "/ws" });
 
   wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
-    const chatId = getChatIdFromRequest(req);
-    wsLog("connect", req, chatId ? `chatId=${chatId}` : "no chatId");
+    const userName = getUserNameFromRequest(req);
+    wsLog("connect", req, userName ? `userName=${userName}` : "no userName");
 
-    if (chatId && getChatById(chatId)) {
-      getRoom(chatId).add(ws);
-      send(ws, { type: "history", messages: getMessages(chatId) });
-    } else {
-      send(ws, { type: "error", message: "chat not found" });
+    if (!userName) {
+      send(ws, { type: "error", message: "userName is required" });
+      ws.close();
+      return;
     }
+
+    clients.set(ws, userName);
 
     ws.on("message", (raw) => {
       try {
         const payload = JSON.parse(raw.toString());
         wsLog("message", req, `type=${payload?.type ?? "unknown"}`);
-        if (payload?.type !== "message:send") return;
 
-        const chatIdValue =
-          typeof payload.chatId === "string" ? payload.chatId.trim() : "";
-        const userNameValue =
-          typeof payload.userName === "string" ? payload.userName.trim() : "";
-        const contentValue =
-          typeof payload.content === "string" ? payload.content.trim() : "";
-
-        if (!chatIdValue) {
-          send(ws, { type: "error", message: "chatId is required" });
-          return;
-        }
-        if (!getChatById(chatIdValue)) {
-          send(ws, { type: "error", message: "chat not found" });
-          return;
-        }
-        if (!userNameValue) {
-          send(ws, { type: "error", message: "userName is required" });
-          return;
-        }
-        if (!contentValue) {
-          send(ws, { type: "error", message: "content is required" });
+        if (payload?.type === "open") {
+          const chatId = typeof payload.chatId === "string" ? payload.chatId.trim() : "";
+          if (!chatId || !getChatById(chatId)) {
+            send(ws, { type: "error", message: "chat not found" });
+            return;
+          }
+          const out: HistoryEvent = {
+            type: "history",
+            chatId,
+            messages: getMessages(chatId),
+          };
+          send(ws, out);
           return;
         }
 
-        addUserToRoom(chatIdValue, userNameValue);
-        const message = saveMessage(chatIdValue, userNameValue, contentValue);
+        if (payload?.type === "message:send") {
+          const chatId = typeof payload.chatId === "string" ? payload.chatId.trim() : "";
+          const content = typeof payload.content === "string" ? payload.content.trim() : "";
 
-        if (!message) {
-          send(ws, { type: "error", message: "failed to save message" });
+          if (!chatId || !getChatById(chatId)) {
+            send(ws, { type: "error", message: "chat not found" });
+            return;
+          }
+          if (!content) {
+            send(ws, { type: "error", message: "content is required" });
+            return;
+          }
+
+          const connectedUserName = clients.get(ws)!;
+          const message = saveMessage(chatId, connectedUserName, content);
+
+          if (!message) {
+            send(ws, { type: "error", message: "failed to save message" });
+            return;
+          }
+
+          const out: MessageNewEvent = { type: "message:new", chatId, message };
+          broadcastAll(out);
           return;
         }
-
-        broadcast(chatIdValue, { type: "message:new", message });
       } catch {
         send(ws, { type: "error", message: "invalid message format" });
       }
     });
 
     ws.on("close", () => {
-      wsLog("disconnect", req, chatId ? `chatId=${chatId}` : "no chatId");
-      if (chatId) {
-        getRoom(chatId).delete(ws);
-      }
+      wsLog("disconnect", req, `userName=${clients.get(ws) ?? "unknown"}`);
+      clients.delete(ws);
     });
   });
 }
