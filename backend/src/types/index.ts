@@ -19,11 +19,13 @@ export type Message = {
 
 export type HistoryEvent = {
   type: "history";
+  chatId: string;
   messages: Message[];
 };
 
 export type MessageNewEvent = {
-  type: "message";
+  type: "message:new";
+  chatId: string;
   message: Message;
 };
 
@@ -31,4 +33,3 @@ export type ChatCreatedEvent = {
   type: "chat:created";
   chat: Chat;
 };
-
