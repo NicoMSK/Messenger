@@ -7,34 +7,19 @@ import {
   ChatsWrapperForm,
 } from "./Messages.styles";
 import { useState } from "react";
-import { addMessage } from "../../../store/slices/messagesSlice";
-import { useAppDispatch, useAppSelector } from "../../../store/store-hooks";
+import { useAppSelector } from "../../../store/store-hooks";
 import type { ChatProps } from "../../../shared/types/chat.types";
+import { socketService } from "../../../api/socketService";
 
 export function ChatForm({ chatId }: ChatProps) {
   const [inputText, setInputText] = useState("");
-  const dispatch = useAppDispatch();
   const author =
     useAppSelector((state) => state.auth.currentUser?.name) || "Гость";
 
-  const handleSend = (event: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSend = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const timeMessage = new Date().toLocaleString().substring(0, 17);
-
     if (inputText.trim() === "") return;
-
-    dispatch(
-      addMessage({
-        chatId,
-        message: {
-          id: Date.now(),
-          text: inputText,
-          author: author,
-          time: timeMessage,
-        },
-      }),
-    );
-
+    socketService.sendMessage(chatId, author, inputText.trim());
     setInputText("");
   };
 
@@ -43,7 +28,7 @@ export function ChatForm({ chatId }: ChatProps) {
       <ChatsFormMessage
         noValidate
         autoComplete="off"
-        onSubmit={(e) => handleSend(e)}
+        onSubmit={handleSend}
       >
         <FormControl fullWidth>
           <OutlinedInput
