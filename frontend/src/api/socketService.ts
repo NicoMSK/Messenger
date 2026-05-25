@@ -11,8 +11,8 @@ type BackendMessage = {
 };
 
 export type WsEvent =
-  | { type: "history"; messages: BackendMessage[] }
-  | { type: "message:new"; message: BackendMessage }
+  | { type: "history"; chatId: string; messages: BackendMessage[] }
+  | { type: "message:new"; chatId: string; message: BackendMessage }
   | { type: "error"; message: string };
 
 type EventHandler = (event: WsEvent) => void;
@@ -30,9 +30,9 @@ let ws: WebSocket | null = null;
 const handlers = new Set<EventHandler>();
 
 export const socketService = {
-  connect(chatId: string) {
+  connect(userName: string) {
     socketService.disconnect();
-    ws = new WebSocket(`${WS_URL}?chatId=${encodeURIComponent(chatId)}`);
+    ws = new WebSocket(`${WS_URL}?userName=${encodeURIComponent(userName)}`);
 
     ws.onmessage = (event) => {
       try {
@@ -55,11 +55,28 @@ export const socketService = {
     }
   },
 
-  sendMessage(chatId: string, userName: string, content: string) {
+  openChat(chatId: string) {
     if (ws?.readyState === WebSocket.OPEN) {
-      ws.send(
-        JSON.stringify({ type: "message:send", chatId, userName, content }),
-      );
+      ws.send(JSON.stringify({ type: "open", chatId }));
+    }
+  },
+
+  openChatWhenReady(chatId: string) {
+    if (!ws) return;
+    if (ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: "open", chatId }));
+    } else {
+      const onOpen = () => {
+        ws?.send(JSON.stringify({ type: "open", chatId }));
+        ws?.removeEventListener("open", onOpen);
+      };
+      ws.addEventListener("open", onOpen);
+    }
+  },
+
+  sendMessage(chatId: string, content: string) {
+    if (ws?.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: "message:send", chatId, content }));
     }
   },
 
