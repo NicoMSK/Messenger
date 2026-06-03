@@ -9,12 +9,15 @@ import { EmptyChatPage } from "../../shared/components/EmptyChatPage";
 import { useAppDispatch } from "../../store/store-hooks";
 import { addChat, deleteChat, setChats } from "../../store/slices/chatsSlice";
 import { createChat, deleteChatApi, getChats } from "../../api/chatApi";
+import { useSocketConnection } from "../../api/socket";
 
 export function ChatPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const chatId = searchParams.get("chatId");
   const [openAddNewChatModal, setOpenAddNewChatModal] = useState(false);
   const dispatch = useAppDispatch();
+
+  useSocketConnection();
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -46,7 +49,7 @@ export function ChatPage() {
     }
 
     dispatch(deleteChat(idChat));
-    
+
     if (chatId === idChat) {
       setSearchParams({});
     }

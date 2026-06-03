@@ -26,6 +26,8 @@ export function initSocket(io: SocketIOServer) {
   ensureSeedData();
 
   io.on("connection", (socket) => {
+    console.log("new connection");
+    console.log(socket.handshake.query);
     const chatId = getChatIdFromQuery(socket);
 
     if (chatId && getChatById(chatId)) {
@@ -39,6 +41,7 @@ export function initSocket(io: SocketIOServer) {
     }
 
     socket.on("message:send", (payload: MessageSendPayload) => {
+      console.log("SERVER CONNECT", socket.id);
       try {
         const chatIdValue =
           typeof payload?.chatId === "string" ? payload.chatId.trim() : "";
