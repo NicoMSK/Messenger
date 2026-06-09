@@ -1,31 +1,41 @@
 import { useEffect } from "react";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 const HOST_URL = "http://localhost:4000";
-const newSocket = io(HOST_URL);
+let newSocket: Socket | null = null;
 
-export function useSocketConnection() {
+export function useSocketConnection(isAuthorized: boolean) {
   useEffect(() => {
-    newSocket.on("connect", () => {
-      console.log("Подключено к сокетам:", newSocket.id);
+    if (!isAuthorized) return;
+
+    newSocket = io(HOST_URL);
+
+    const socket = newSocket;
+
+    socket.on("connect", () => {
+      console.log("Подключено к сокетам:", socket.id);
     });
 
-    newSocket.on("connect_error", (error) => {
+    socket.on("message:new", (message) => {
+      console.log("Новое сообщение:", message);
+    });
+
+    socket.on("connect_error", (error) => {
       console.error("Ошибка подключения к сокетам:", error);
     });
 
-    newSocket.on("reconnect", (attemptNumber) => {
+    socket.on("reconnect", (attemptNumber) => {
       console.log(`Переподключение к сокетам (попытка ${attemptNumber})`);
     });
 
-    newSocket.on("disconnect", () => {
+    socket.on("disconnect", () => {
       console.log("Disconnected from server");
     });
 
     return () => {
-      newSocket.disconnect();
+      socket.disconnect();
     };
-  }, []);
+  }, [isAuthorized]);
 }
 
 export function sendMessageToServer(
@@ -36,16 +46,3 @@ export function sendMessageToServer(
   console.log("socket id:", newSocket.id);
   newSocket.emit("message:send", { chatId, userName, content });
 }
-
-// export function subscribeToMessages() {
-//   useEffect(() => {
-//     newSocket.on("message:new", (message) => {
-//       console.log("Новое сообщение:", message);
-//       return message;
-//     });
-
-//     return () => {
-//       newSocket.off("message:new");
-//     };
-//   }, []);
-// }

@@ -26,17 +26,17 @@ export function ChatForm({ chatId }: ChatProps) {
 
     sendMessageToServer(chatId, author, inputText);
 
-    // dispatch(
-    //   addMessage({
-    //     chatId,
-    //     message: {
-    //       id: Date.now(),
-    //       text: inputText,
-    //       author: author,
-    //       time: timeMessage,
-    //     },
-    //   }),
-    // );
+    dispatch(
+      addMessage({
+        chatId,
+        message: {
+          id: Date.now(),
+          text: inputText,
+          author: author,
+          time: timeMessage,
+        },
+      }),
+    );
 
     setInputText("");
   };

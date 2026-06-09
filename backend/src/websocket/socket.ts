@@ -41,7 +41,7 @@ export function initSocket(io: SocketIOServer) {
     }
 
     socket.on("message:send", (payload: MessageSendPayload) => {
-      console.log("SERVER CONNECT", socket.id);
+      console.log("playLoad =>", payload);
       try {
         const chatIdValue =
           typeof payload?.chatId === "string" ? payload.chatId.trim() : "";
@@ -76,6 +76,7 @@ export function initSocket(io: SocketIOServer) {
         }
 
         const out: MessageNewEvent = { type: "message", message };
+        console.log("значение чата ", chatIdValue);
         io.to(chatIdValue).emit("message:new", out);
       } catch {
         socket.emit("error", { message: "unexpected error" });
