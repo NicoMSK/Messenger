@@ -7,7 +7,26 @@ import {
   removeUserFromRoom,
   saveMessage,
 } from "../services/chatService.js";
-import type { HistoryEvent, MessageNewEvent } from "../types/index.js";
+import type {
+  HistoryEvent,
+  MessageNewEvent,
+  TypingEvent,
+} from "../types/index.js";
+
+type HistoryGetPayload = {
+  chatId: string;
+};
+
+type ChatMembershipPayload = {
+  chatId: string;
+  userName: string;
+};
+
+type TypingPayload = {
+  chatId: string;
+  userName: string;
+  isTyping: boolean;
+};
 
 type MessageSendPayload = {
   chatId: string;
@@ -15,40 +34,112 @@ type MessageSendPayload = {
   content: string;
 };
 
-function getChatIdFromQuery(socket: Socket): string | null {
-  const chatId = socket.handshake.query.chatId;
-  if (typeof chatId !== "string") return null;
-  const trimmed = chatId.trim();
-  return trimmed ? trimmed : null;
+type SocketData = {
+  chatId?: string;
+  userName?: string;
+};
+
+function asTrimmedString(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
 }
 
 export function initSocket(io: SocketIOServer) {
   ensureSeedData();
 
-  io.on("connection", (socket) => {
-    console.log("new connection");
-    console.log(socket.handshake.query);
-    const chatId = getChatIdFromQuery(socket);
+  io.on("connection", (socket: Socket) => {
+    console.log("new connection", socket.id);
 
-    if (chatId && getChatById(chatId)) {
-      socket.join(chatId);
+    socket.on("history:get", (payload: HistoryGetPayload) => {
+      try {
+        const chatId = asTrimmedString(payload?.chatId);
 
-      const history: HistoryEvent = {
-        type: "history",
-        messages: getMessages(chatId),
-      };
-      socket.emit("history", history);
-    }
+        if (!chatId) {
+          socket.emit("error", { message: "chatId is required" });
+          return;
+        }
+        if (!getChatById(chatId)) {
+          socket.emit("error", { message: "chat not found" });
+          return;
+        }
+
+        const history: HistoryEvent = {
+          type: "history",
+          messages: getMessages(chatId),
+        };
+        socket.emit("history", history);
+      } catch {
+        socket.emit("error", { message: "unexpected error" });
+      }
+    });
+
+    socket.on("chat:join", (payload: ChatMembershipPayload) => {
+      try {
+        const chatId = asTrimmedString(payload?.chatId);
+        const userName = asTrimmedString(payload?.userName);
+
+        if (!chatId) {
+          socket.emit("error", { message: "chatId is required" });
+          return;
+        }
+        if (!getChatById(chatId)) {
+          socket.emit("error", { message: "chat not found" });
+          return;
+        }
+        if (!userName) {
+          socket.emit("error", { message: "userName is required" });
+          return;
+        }
+
+        const data = socket.data as SocketData;
+        data.chatId = chatId;
+        data.userName = userName;
+        addUserToRoom(chatId, userName);
+      } catch {
+        socket.emit("error", { message: "unexpected error" });
+      }
+    });
+
+    socket.on("chat:leave", (payload: ChatMembershipPayload) => {
+      try {
+        const chatId = asTrimmedString(payload?.chatId);
+        const userName =
+          asTrimmedString(payload?.userName) ||
+          (socket.data as SocketData).userName ||
+          "";
+
+        if (!chatId || !userName) return;
+
+        removeUserFromRoom(chatId, userName);
+      } catch {
+        socket.emit("error", { message: "unexpected error" });
+      }
+    });
+
+    socket.on("typing", (payload: TypingPayload) => {
+      try {
+        const chatId = asTrimmedString(payload?.chatId);
+        const userName = asTrimmedString(payload?.userName);
+
+        if (!chatId || !getChatById(chatId) || !userName) return;
+
+        const event: TypingEvent = {
+          type: "typing",
+          chatId,
+          userName,
+          isTyping: Boolean(payload?.isTyping),
+        };
+        socket.broadcast.emit("typing", event);
+      } catch {
+        socket.emit("error", { message: "unexpected error" });
+      }
+    });
 
     socket.on("message:send", (payload: MessageSendPayload) => {
       console.log("playLoad =>", payload);
       try {
-        const chatIdValue =
-          typeof payload?.chatId === "string" ? payload.chatId.trim() : "";
-        const userNameValue =
-          typeof payload?.userName === "string" ? payload.userName.trim() : "";
-        const contentValue =
-          typeof payload?.content === "string" ? payload.content.trim() : "";
+        const chatIdValue = asTrimmedString(payload?.chatId);
+        const userNameValue = asTrimmedString(payload?.userName);
+        const contentValue = asTrimmedString(payload?.content);
 
         if (!chatIdValue) {
           socket.emit("error", { message: "chatId is required" });
@@ -67,7 +158,6 @@ export function initSocket(io: SocketIOServer) {
           return;
         }
 
-        addUserToRoom(chatIdValue, userNameValue);
         const message = saveMessage(chatIdValue, userNameValue, contentValue);
 
         if (!message) {
@@ -76,20 +166,16 @@ export function initSocket(io: SocketIOServer) {
         }
 
         const out: MessageNewEvent = { type: "message", message };
-        console.log("значение чата ", chatIdValue);
-        io.to(chatIdValue).emit("message:new", out);
+        io.emit("message:new", out);
       } catch {
         socket.emit("error", { message: "unexpected error" });
       }
     });
 
     socket.on("disconnect", () => {
-      const chatId = getChatIdFromQuery(socket);
-      // Мы не знаем имя пользователя (оно приходит в payload сообщений),
-      // поэтому корректно убрать userName из roomUsers здесь нельзя.
-      // roomUsers — опциональный счетчик и его можно доработать позже.
-      if (chatId) {
-        removeUserFromRoom(chatId, "__unknown__");
+      const data = socket.data as SocketData;
+      if (data.chatId && data.userName) {
+        removeUserFromRoom(data.chatId, data.userName);
       }
     });
   });

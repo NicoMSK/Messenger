@@ -32,3 +32,10 @@ export type ChatCreatedEvent = {
   chat: Chat;
 };
 
+export type TypingEvent = {
+  type: "typing";
+  chatId: string;
+  userName: string;
+  isTyping: boolean;
+};
+
