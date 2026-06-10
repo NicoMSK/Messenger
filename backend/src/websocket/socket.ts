@@ -1,6 +1,6 @@
 import type { Server as SocketIOServer, Socket } from "socket.io";
 
-import { ensureSeedData, getChatById } from "../store/store.js";
+import { ensureSeedData, getChatById, getChats } from "../store/store.js";
 import {
   addUserToRoom,
   getMessages,
@@ -46,8 +46,26 @@ function asTrimmedString(value: unknown): string {
 export function initSocket(io: SocketIOServer) {
   ensureSeedData();
 
+  console.log("init socket.io", { chats: getChats() });
+
   io.on("connection", (socket: Socket) => {
     console.log("new connection", socket.id);
+
+    // Перехват всех входящих пакетов в одном месте
+    socket.onAny((eventName: string, ...args: any[]) => {
+      console.log(
+        `[Входящее] Событие: "${eventName}" | Данные:`,
+        JSON.stringify(args),
+      );
+    });
+
+    // Перехват всех исходящих пакетов в одном месте
+    socket.onAnyOutgoing((event, ...args) => {
+      console.log(
+        `[OUTGOING] Отправка события: "${event}"`,
+        JSON.stringify(args),
+      );
+    });
 
     socket.on("history:get", (payload: HistoryGetPayload) => {
       try {
@@ -135,7 +153,6 @@ export function initSocket(io: SocketIOServer) {
     });
 
     socket.on("message:send", (payload: MessageSendPayload) => {
-      console.log("playLoad =>", payload);
       try {
         const chatIdValue = asTrimmedString(payload?.chatId);
         const userNameValue = asTrimmedString(payload?.userName);
@@ -180,3 +197,4 @@ export function initSocket(io: SocketIOServer) {
     });
   });
 }
+
