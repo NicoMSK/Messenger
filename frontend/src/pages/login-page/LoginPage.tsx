@@ -13,6 +13,7 @@ import {
 import { useAppDispatch } from "../../store/store-hooks";
 import { login } from "../../store/slices/authSlice";
 import { loginUser } from "../../api/loginApi";
+import { connectSocket } from "../../api/socket";
 
 export function LoginPage() {
   const [inputIsEmpty, setInputIsEmpty] = useState(false);
@@ -33,6 +34,7 @@ export function LoginPage() {
 
     setInputIsEmpty(false);
     setInputValue("");
+    connectSocket();
     navigate("/chats");
   }
 

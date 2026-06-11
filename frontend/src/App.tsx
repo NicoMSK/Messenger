@@ -3,15 +3,8 @@ import { LoginPage } from "./pages/login-page/LoginPage";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ChatPage } from "./pages/chat-page/ChatPage";
 import { NotFoundPage } from "./pages/NotFoundPage/NotFoundPage";
-import { useSocketConnection } from "./api/socket";
-import { useAppSelector } from "./store/store-hooks";
 
 export default function App() {
-  const currentUser = useAppSelector((state) => state.auth.currentUser);
-  const isAuthorized = Boolean(currentUser);
-
-  useSocketConnection(isAuthorized);
-
   return (
     <ScopedCssBaseline>
       <BrowserRouter>
