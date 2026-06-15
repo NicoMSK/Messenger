@@ -11,9 +11,7 @@ import {
   LoginButtonWrapper,
 } from "./LoginPage.styles";
 import { useAppDispatch } from "../../store/store-hooks";
-import { login } from "../../store/slices/authSlice";
-import { loginUser } from "../../api/loginApi";
-import { connectSocket } from "../../api/socket";
+import { loginUserThunk } from "../../store/slices/authSlice";
 
 export function LoginPage() {
   const [inputIsEmpty, setInputIsEmpty] = useState(false);
@@ -23,18 +21,15 @@ export function LoginPage() {
 
   async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
-    const user = await loginUser(inputValue);
 
     if (inputValue.trim().length === 0) {
       setInputIsEmpty(true);
       return;
     }
-
-    dispatch(login(user));
+    await dispatch(loginUserThunk(inputValue));
 
     setInputIsEmpty(false);
     setInputValue("");
-    connectSocket();
     navigate("/chats");
   }
 

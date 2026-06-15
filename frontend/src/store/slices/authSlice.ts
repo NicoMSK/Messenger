@@ -1,4 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { loginUser, logoutUser } from "../../api/loginApi";
+import { connectSocket, disconnectSocket } from "../../api/socket";
+import type { AppDispatch, RootState } from "../store";
 
 type User = {
   id: string;
@@ -12,6 +15,43 @@ type AuthState = {
 const initialAuthState: AuthState = {
   currentUser: null,
 };
+
+export function loginUserThunk(inputValue: string) {
+  return async (dispatch: AppDispatch) => {
+    const user = await loginUser(inputValue);
+
+    if (!user) {
+      console.error("Ошибка входа: пользователь не найден");
+      return;
+    }
+
+    connectSocket();
+    dispatch(login(user));
+  };
+}
+
+export function logoutUserThunk() {
+  return async (dispatch: AppDispatch, getState: () => RootState) => {
+    const currentUser = getState().auth.currentUser;
+
+    if (!currentUser) {
+      console.error("Ошибка выхода: пользователь не найден");
+      return;
+    }
+
+    const isUserExit = await logoutUser(currentUser.name);
+
+    if (!isUserExit) {
+      console.error("Ошибка выхода: не удалось выйти из системы");
+      return;
+    }
+
+    disconnectSocket();
+    dispatch(logout());
+
+    return true;
+  };
+}
 
 export const authSlice = createSlice({
   name: "auth",
