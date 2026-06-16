@@ -7,18 +7,21 @@ import {
   ChatsList,
   ChatsTitle,
   ChatsWrapper,
+  DeleteChatButton,
 } from "./ChatsList.styles";
 import { useAppDispatch, useAppSelector } from "../../../store/store-hooks";
-import { logout } from "../../../store/slices/authSlice";
+import {  logoutUserThunk } from "../../../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { ExitButton } from "../../../shared/components/ExitButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export type ChatProp = {
   openAddChat: () => void;
+  removeChat: (idChat: string) => void;
   chatId: string | null;
 };
 
-export function Chats({ openAddChat, chatId }: ChatProp) {
+export function Chats({ openAddChat, removeChat, chatId }: ChatProp) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const chatsData = useAppSelector((state) => state.chat.chats);
@@ -26,9 +29,12 @@ export function Chats({ openAddChat, chatId }: ChatProp) {
     (state) => state.auth.currentUser?.name || "Гость",
   );
 
-  function handleLogout() {
-    dispatch(logout());
-    navigate("/login");
+  async function handleLogout() {
+    const isLoggedOut = await dispatch(logoutUserThunk());
+
+    if (isLoggedOut) {
+      navigate("/login");
+    } 
   }
 
   return (
@@ -44,8 +50,15 @@ export function Chats({ openAddChat, chatId }: ChatProp) {
               isActive={chatId === chat.id}
               to={`/chats?chatId=${chat.id}`}
             >
-              {chat.title}
+              {chat.name}
             </ChatsLink>
+            <DeleteChatButton
+              onClick={() => removeChat(chat.id)}
+              aria-label="delete"
+              size="small"
+            >
+              <DeleteIcon fontSize="inherit" />
+            </DeleteChatButton>
           </ChatsItem>
         ))}
       </ChatsList>

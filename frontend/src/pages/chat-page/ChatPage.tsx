@@ -3,11 +3,12 @@ import { useEscClose } from "../../shared/hooks/useEscClose";
 import { ChatsContent, ChatSection } from "./ChatPage.styles";
 import { Chats } from "./components/ChatsList";
 import { AddNewChatModal } from "./components/AddNewChatModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChatWindow } from "./components/ChatWindow";
 import { EmptyChatPage } from "../../shared/components/EmptyChatPage";
 import { useAppDispatch } from "../../store/store-hooks";
-import { addChat } from "../../store/slices/chatsSlice";
+import { addChat, deleteChat, setChats } from "../../store/slices/chatsSlice";
+import { createChat, deleteChatApi, getChats } from "../../api/chatApi";
 
 export function ChatPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -15,14 +16,40 @@ export function ChatPage() {
   const [openAddNewChatModal, setOpenAddNewChatModal] = useState(false);
   const dispatch = useAppDispatch();
 
-  function addNewChat(inputValue: string) {
-    const newChatId = crypto.randomUUID();
+  useEffect(() => {
+    const fetchChats = async () => {
+      const chats = await getChats();
+      dispatch(setChats(chats));
+    };
+    fetchChats();
+  }, []);
 
-    if (inputValue.trim().length === 0) return;
+  async function addNewChat(inputValue: string) {
+    const newChat = await createChat(inputValue);
 
-    dispatch(addChat({ id: newChatId, title: inputValue }));
-    setSearchParams({ chatId: newChatId });
+    if (!newChat) {
+      console.error("Failed to create chat");
+      return;
+    }
+
+    dispatch(addChat(newChat));
+    setSearchParams({ chatId: newChat.id });
     setOpenAddNewChatModal(false);
+  }
+
+  async function removeChat(idChat: string) {
+    const result = await deleteChatApi(idChat);
+
+    if (!result) {
+      console.error("Failed to delete chat");
+      return;
+    }
+
+    dispatch(deleteChat(idChat));
+
+    if (chatId === idChat) {
+      setSearchParams({});
+    }
   }
 
   function openAddChat() {
@@ -47,7 +74,11 @@ export function ChatPage() {
         addChat={addNewChat}
         closeForm={closeModal}
       />
-      <Chats openAddChat={openAddChat} chatId={chatId} />
+      <Chats
+        openAddChat={openAddChat}
+        removeChat={removeChat}
+        chatId={chatId}
+      />
       <ChatsContent>
         {chatId ? <ChatWindow chatId={chatId} /> : <EmptyChatPage />}
       </ChatsContent>

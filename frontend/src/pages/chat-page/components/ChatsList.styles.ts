@@ -1,6 +1,7 @@
 import { styled } from "@mui/material/styles";
 import { NavLink } from "react-router-dom";
 import { COLOR } from "../../styleVariables";
+import { IconButton } from "@mui/material";
 
 type ChatsLinkProps = {
   isActive: boolean;
@@ -48,8 +49,11 @@ export const ChatsList = styled("ul")({
 
 export const ChatsItem = styled("li")({
   padding: "8px",
-
+  display: "flex",
   borderBottom: "1px solid #f0f0f0",
+  "&:hover": {
+    backgroundColor: "#eaeaea",
+  },
 });
 
 export const ChatsLink = styled(NavLink, {
@@ -65,9 +69,10 @@ export const ChatsLink = styled(NavLink, {
   cursor: "pointer",
   borderRadius: "10px",
 
-  "&:hover": {
-    backgroundColor: "#eaeaea",
-  },
-
   backgroundColor: isActive ? "#e3ff73" : "transparent",
 }));
+
+export const DeleteChatButton = styled(IconButton)({
+  // opacity: 0,
+  // transition: "opacity 0.2s ease",
+});

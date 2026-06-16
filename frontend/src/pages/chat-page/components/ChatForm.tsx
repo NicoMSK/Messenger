@@ -10,6 +10,7 @@ import { useState } from "react";
 import { addMessage } from "../../../store/slices/messagesSlice";
 import { useAppDispatch, useAppSelector } from "../../../store/store-hooks";
 import type { ChatProps } from "../../../shared/types/chat.types";
+import { sendMessageToServer } from "../../../api/socket";
 
 export function ChatForm({ chatId }: ChatProps) {
   const [inputText, setInputText] = useState("");
@@ -22,6 +23,8 @@ export function ChatForm({ chatId }: ChatProps) {
     const timeMessage = new Date().toLocaleString().substring(0, 17);
 
     if (inputText.trim() === "") return;
+
+    sendMessageToServer(chatId, author, inputText);
 
     dispatch(
       addMessage({

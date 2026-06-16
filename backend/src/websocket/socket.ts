@@ -26,6 +26,8 @@ export function initSocket(io: SocketIOServer) {
   ensureSeedData();
 
   io.on("connection", (socket) => {
+    console.log("new connection");
+    console.log(socket.handshake.query);
     const chatId = getChatIdFromQuery(socket);
 
     if (chatId && getChatById(chatId)) {
@@ -39,6 +41,7 @@ export function initSocket(io: SocketIOServer) {
     }
 
     socket.on("message:send", (payload: MessageSendPayload) => {
+      console.log("playLoad =>", payload);
       try {
         const chatIdValue =
           typeof payload?.chatId === "string" ? payload.chatId.trim() : "";
@@ -73,6 +76,7 @@ export function initSocket(io: SocketIOServer) {
         }
 
         const out: MessageNewEvent = { type: "message", message };
+        console.log("значение чата ", chatIdValue);
         io.to(chatIdValue).emit("message:new", out);
       } catch {
         socket.emit("error", { message: "unexpected error" });

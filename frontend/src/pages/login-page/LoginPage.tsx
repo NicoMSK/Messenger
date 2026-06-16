@@ -11,7 +11,7 @@ import {
   LoginButtonWrapper,
 } from "./LoginPage.styles";
 import { useAppDispatch } from "../../store/store-hooks";
-import { login } from "../../store/slices/authSlice";
+import { loginUserThunk } from "../../store/slices/authSlice";
 
 export function LoginPage() {
   const [inputIsEmpty, setInputIsEmpty] = useState(false);
@@ -19,15 +19,14 @@ export function LoginPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (inputValue.trim().length === 0) {
       setInputIsEmpty(true);
       return;
     }
-
-    dispatch(login({ id: crypto.randomUUID(), name: inputValue }));
+    await dispatch(loginUserThunk(inputValue));
 
     setInputIsEmpty(false);
     setInputValue("");
