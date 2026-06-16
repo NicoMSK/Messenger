@@ -10,11 +10,10 @@ import {
   DeleteChatButton,
 } from "./ChatsList.styles";
 import { useAppDispatch, useAppSelector } from "../../../store/store-hooks";
-import { logout } from "../../../store/slices/authSlice";
+import { logoutUserThunk } from "../../../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { ExitButton } from "../../../shared/components/ExitButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { logoutUser } from "../../../api/loginApi";
 
 export type ChatProp = {
   openAddChat: () => void;
@@ -31,9 +30,9 @@ export function Chats({ openAddChat, removeChat, chatId }: ChatProp) {
   );
 
   async function handleLogout() {
-    const isUserExit = await logoutUser(currentUser);
-    if (isUserExit) {
-      dispatch(logout());
+    const isLoggedOut = await dispatch(logoutUserThunk());
+
+    if (isLoggedOut) {
       navigate("/login");
     }
   }

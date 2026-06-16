@@ -153,6 +153,7 @@ export function initSocket(io: SocketIOServer) {
     });
 
     socket.on("message:send", (payload: MessageSendPayload) => {
+      console.log("playLoad =>", payload);
       try {
         const chatIdValue = asTrimmedString(payload?.chatId);
         const userNameValue = asTrimmedString(payload?.userName);
@@ -197,4 +198,3 @@ export function initSocket(io: SocketIOServer) {
     });
   });
 }
-
