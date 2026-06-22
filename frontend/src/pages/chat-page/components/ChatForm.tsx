@@ -11,20 +11,22 @@ import { addMessage } from "../../../store/slices/messagesSlice";
 import { useAppDispatch, useAppSelector } from "../../../store/store-hooks";
 import type { ChatProps } from "../../../shared/types/chat.types";
 import { sendMessageToServer } from "../../../api/socket";
+import { getCurrentUserName } from "../../../store/selectors";
 
 export function ChatForm({ chatId }: ChatProps) {
   const [inputText, setInputText] = useState("");
   const dispatch = useAppDispatch();
-  const author =
-    useAppSelector((state) => state.auth.currentUser?.name) || "Гость";
+  const currentUser = useAppSelector(getCurrentUserName);
 
   const handleSend = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     const timeMessage = new Date().toLocaleString().substring(0, 17);
 
     if (inputText.trim() === "") return;
-
-    sendMessageToServer(chatId, author, inputText);
+    if (!currentUser) {
+      return null;
+    }
+    sendMessageToServer(chatId, currentUser, inputText);
 
     dispatch(
       addMessage({
@@ -32,7 +34,7 @@ export function ChatForm({ chatId }: ChatProps) {
         message: {
           id: Date.now(),
           text: inputText,
-          author: author,
+          author: currentUser,
           time: timeMessage,
         },
       }),
