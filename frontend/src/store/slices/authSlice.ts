@@ -1,6 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { loginUser, logoutUser } from "../../api/loginApi";
-import { connectSocket, disconnectSocket } from "../../api/socket";
 import type { AppDispatch, RootState } from "../store";
 import { getUser, removeUser, saveUser } from "../../utils/storage";
 
@@ -26,7 +25,6 @@ export function loginUserThunk(inputValue: string) {
       return;
     }
 
-    connectSocket();
     dispatch(login(user));
     saveUser(user);
   };
@@ -48,7 +46,6 @@ export function logoutUserThunk() {
       return;
     }
 
-    disconnectSocket();
     dispatch(logout());
     removeUser();
 

@@ -4,18 +4,38 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ChatPage } from "./pages/chat-page/ChatPage";
 import { NotFoundPage } from "./pages/NotFoundPage/NotFoundPage";
 import { ProtectedRoute } from "./shared/components/ProtectedRoute";
-import { connectSocket } from "./api/socket";
+import {
+  connectSocket,
+  disconnectSocket,
+  subscribeToMessages,
+  unsubscribeFromMessages,
+} from "./api/socket";
 import { useEffect } from "react";
-import { useAppSelector } from "./store/store-hooks";
+import { useAppDispatch, useAppSelector } from "./store/store-hooks";
 import { getCurrentUserName } from "./store/selectors";
+import { addMessage } from "./store/slices/messagesSlice";
 
 export default function App() {
   const currentUser = useAppSelector(getCurrentUserName);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (currentUser) {
       connectSocket();
+      subscribeToMessages((message) => {
+        dispatch(
+          addMessage({
+            chatId: message.message.chatId,
+            message: message.message,
+          }),
+        );
+      });
     }
+
+    return () => {
+      unsubscribeFromMessages();
+      disconnectSocket();
+    };
   }, [currentUser]);
 
   return (
