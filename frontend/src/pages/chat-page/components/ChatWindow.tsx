@@ -17,10 +17,9 @@ export function ChatWindow({ chatId }: ChatProps) {
         messages.map((mes) => (
           <Messages
             key={mes.id}
-            id={mes.id}
-            author={mes.author}
-            time={mes.time}
-            text={mes.text}
+            userName={mes.userName}
+            createdAt={mes.createdAt}
+            content={mes.content}
           />
         ))
       )}

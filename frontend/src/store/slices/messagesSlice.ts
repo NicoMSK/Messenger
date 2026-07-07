@@ -1,10 +1,11 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export type Message = {
-  id: number;
-  text: string;
-  author: string;
-  time: string;
+  id: string;
+  chatId: string;
+  content: string;
+  userName: string;
+  createdAt: number;
 };
 
 type MessageState = {

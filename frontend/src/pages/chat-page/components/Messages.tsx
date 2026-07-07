@@ -1,4 +1,3 @@
-import type { Message } from "../../../store/slices/messagesSlice";
 import {
   MessageAuthor,
   MessageHeader,
@@ -8,15 +7,30 @@ import {
   MessageTime,
 } from "./Messages.styles";
 
-export const Messages = (props: Message) => {
-  const { author, time, text } = props;
+type MessageProps = {
+  userName: string;
+  createdAt: number;
+  content: string;
+};
+
+const formatter = new Intl.DateTimeFormat("ru", {
+  year: "numeric",
+  month: "numeric",
+  day: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
+export const Messages = (props: MessageProps) => {
+  const { userName: author, createdAt: time, content: text } = props;
+  const formattedTime = formatter.format(new Date(time));
 
   return (
     <MessagesWrapper>
       <MessageItem>
         <MessageHeader>
           <MessageAuthor>{author} </MessageAuthor>
-          <MessageTime className="message-time">{time}</MessageTime>
+          <MessageTime className="message-time">{formattedTime}</MessageTime>
         </MessageHeader>
         <MessageText>{text}</MessageText>
       </MessageItem>
