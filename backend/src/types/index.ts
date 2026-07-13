@@ -32,6 +32,11 @@ export type ChatCreatedEvent = {
   chat: Chat;
 };
 
+export type ChatDeletedEvent = {
+  type: "chat:deleted";
+  chatId: string;
+};
+
 export type TypingEvent = {
   type: "typing";
   chatId: string;
