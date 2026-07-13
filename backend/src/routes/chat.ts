@@ -2,7 +2,11 @@ import { Router } from "express";
 import type { Server as SocketIOServer } from "socket.io";
 
 import { createChat, deleteChat, getChats, updateChat } from "../store/store.js";
-import type { ChatCreatedEvent, ChatDeletedEvent } from "../types/index.js";
+import type {
+  ChatCreatedEvent,
+  ChatDeletedEvent,
+  ChatUpdatedEvent,
+} from "../types/index.js";
 
 export function createChatRouter(io: SocketIOServer) {
   const router = Router();
@@ -39,6 +43,9 @@ export function createChatRouter(io: SocketIOServer) {
     if (!updated) {
       return res.status(404).json({ message: "chat not found" });
     }
+
+    const event: ChatUpdatedEvent = { type: "chat:updated", chat: updated };
+    io.emit("chat:updated", event);
 
     return res.json(updated);
   });
