@@ -7,6 +7,7 @@ import { ProtectedRoute } from "./shared/components/ProtectedRoute";
 import {
   connectSocket,
   disconnectSocket,
+  subscribeToChatCreated,
   subscribeToMessages,
   unsubscribeFromMessages,
 } from "./api/socket";
@@ -14,6 +15,7 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./store/store-hooks";
 import { getCurrentUserName } from "./store/selectors";
 import { addMessage } from "./store/slices/messagesSlice";
+import { addChat } from "./store/slices/chatsSlice";
 
 export default function App() {
   const currentUser = useAppSelector(getCurrentUserName);
@@ -22,6 +24,7 @@ export default function App() {
   useEffect(() => {
     if (currentUser) {
       connectSocket();
+
       subscribeToMessages((message) => {
         dispatch(
           addMessage({
@@ -29,6 +32,11 @@ export default function App() {
             message: message.message,
           }),
         );
+      });
+
+      subscribeToChatCreated((chat) => {
+        console.log("Новый чат создан (App.tsx):", chat);
+        dispatch(addChat(chat.chat));
       });
     }
 

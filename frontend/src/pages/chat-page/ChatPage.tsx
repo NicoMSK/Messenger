@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { ChatWindow } from "./components/ChatWindow";
 import { EmptyChatPage } from "../../shared/components/EmptyChatPage";
 import { useAppDispatch } from "../../store/store-hooks";
-import { addChat, deleteChat, setChats } from "../../store/slices/chatsSlice";
+import { deleteChat, setChats } from "../../store/slices/chatsSlice";
 import { createChat, deleteChatApi, getChats } from "../../api/chatApi";
 
 export function ChatPage() {
@@ -32,7 +32,6 @@ export function ChatPage() {
       return;
     }
 
-    dispatch(addChat(newChat));
     setSearchParams({ chatId: newChat.id });
     setOpenAddNewChatModal(false);
   }
