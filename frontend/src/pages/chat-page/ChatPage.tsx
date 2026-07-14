@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { ChatWindow } from "./components/ChatWindow";
 import { EmptyChatPage } from "../../shared/components/EmptyChatPage";
 import { useAppDispatch } from "../../store/store-hooks";
-import { deleteChat, setChats } from "../../store/slices/chatsSlice";
+import { setChats } from "../../store/slices/chatsSlice";
 import { createChat, deleteChatApi, getChats } from "../../api/chatApi";
 
 export function ChatPage() {
@@ -43,8 +43,6 @@ export function ChatPage() {
       console.error("Failed to delete chat");
       return;
     }
-
-    dispatch(deleteChat(idChat));
 
     if (chatId === idChat) {
       setSearchParams({});
