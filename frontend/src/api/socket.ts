@@ -1,6 +1,9 @@
 import { io, Socket } from "socket.io-client";
 import type { MessageNewEvent } from "../shared/types/socket.types";
-import type { ChatCreatedEvent } from "../shared/types/chat.types";
+import type {
+  ChatCreatedEvent,
+  ChatDeletedEvent,
+} from "../shared/types/chat.types";
 
 const HOST_URL = "http://localhost:4000";
 let newSocket: Socket | null = null;
@@ -78,6 +81,19 @@ export function subscribeToChatCreated(
   }
 
   return newSocket.on("chat:created", (chat) => {
+    callback(chat);
+  });
+}
+
+export function subscribeToChatDeleted(
+  callback: (chat: ChatDeletedEvent) => void,
+) {
+  if (!newSocket) {
+    console.error("Сокет не подключен. Сообщение не отправлено.");
+    return;
+  }
+
+  return newSocket.on("chat:deleted", (chat) => {
     callback(chat);
   });
 }
