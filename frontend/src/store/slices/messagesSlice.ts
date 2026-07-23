@@ -34,7 +34,18 @@ export const messagesSlice = createSlice({
 
       state.messages[chatId].push(message);
     },
+
+    setChatHistory: (state, action: PayloadAction<{ messages: Message[] }>) => {
+      const { messages: history } = action.payload;
+
+      if (!history || history.length === 0) return;
+      
+      const chatId = history[0].chatId;
+
+      state.messages[chatId] = history;
+    },
   },
 });
 
-export const { addMessage } = messagesSlice.actions;
+export const { addMessage, setChatHistory } =
+  messagesSlice.actions;

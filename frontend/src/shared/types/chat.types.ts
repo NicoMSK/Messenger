@@ -1,3 +1,5 @@
+import type { Message } from "../../store/slices/messagesSlice";
+
 export type ChatProps = {
   chatId: string;
 };
@@ -12,7 +14,7 @@ export type ChatCreatedEvent = {
   chat: Chat;
 };
 
-export type ChatDeletedEvent = {
-  type: "chat:deleted";
-  chatId: string;
+export type HistoryEvent = {
+  type: "history";
+  messages: Message[];
 };

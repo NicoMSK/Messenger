@@ -2,10 +2,18 @@ import { io, Socket } from "socket.io-client";
 import type { MessageNewEvent } from "../shared/types/socket.types";
 import type {
   ChatCreatedEvent,
-  ChatDeletedEvent,
+  HistoryEvent,
 } from "../shared/types/chat.types";
 
 const HOST_URL = "http://localhost:4000";
+const SOCKET_EVENTS = {
+  MESSAGE_NEW: "message:new",
+  MESSAGE_SEND: "message:send",
+  CHAT_CREATED: "chat:created",
+  HISTORY_GET: "history:get",
+  HISTORY: "history",
+};
+
 let newSocket: Socket | null = null;
 
 export function connectSocket() {
@@ -14,7 +22,7 @@ export function connectSocket() {
   newSocket = io(HOST_URL);
 
   const socket = newSocket;
-
+  console.log(newSocket?.connected);
   socket.on("connect", () => {
     console.log("Подключено к сокетам:", socket.id);
   });
@@ -48,7 +56,7 @@ export function sendMessageToServer(
     console.error("Сокет не подключен. Сообщение не отправлено.");
     return;
   }
-  newSocket.emit("message:send", { chatId, userName, content });
+  newSocket.emit(SOCKET_EVENTS.MESSAGE_SEND, { chatId, userName, content });
 }
 
 export function subscribeToMessages(
@@ -58,7 +66,7 @@ export function subscribeToMessages(
     console.error("Сокет не подключен. Сообщение не отправлено.");
     return;
   }
-  return newSocket.on("message:new", (message) => {
+  return newSocket.on(SOCKET_EVENTS.MESSAGE_NEW, (message) => {
     callback(message);
   });
 }
@@ -69,7 +77,7 @@ export function unsubscribeFromMessages() {
     return;
   }
 
-  newSocket.off("message:new");
+  newSocket.off(SOCKET_EVENTS.MESSAGE_NEW);
 }
 
 export function subscribeToChatCreated(
@@ -80,20 +88,29 @@ export function subscribeToChatCreated(
     return;
   }
 
-  return newSocket.on("chat:created", (chat) => {
+  return newSocket.on(SOCKET_EVENTS.CHAT_CREATED, (chat) => {
     callback(chat);
   });
 }
 
-export function subscribeToChatDeleted(
-  callback: (chat: ChatDeletedEvent) => void,
+export function getChatHistoryFromServer({ chatId }: { chatId: string }) {
+  if (!newSocket) {
+    console.error("Сокет не подключен. Сообщение не отправлено.");
+    return;
+  }
+
+  return newSocket.emit(SOCKET_EVENTS.HISTORY_GET, { chatId });
+}
+
+export function subscribeToChatHistory(
+  callback: (history: HistoryEvent) => void,
 ) {
   if (!newSocket) {
     console.error("Сокет не подключен. Сообщение не отправлено.");
     return;
   }
 
-  return newSocket.on("chat:deleted", (chat) => {
-    callback(chat);
+  return newSocket?.on(SOCKET_EVENTS.HISTORY, (history) => {
+    callback(history);
   });
 }
